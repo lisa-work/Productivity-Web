@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wdth,wght@0,75..100,100..900;1,75..100,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-family-sans: 'Roboto', sans-serif;
+  --font-family-mono: 'Space Mono', monospace;
+  --breakpoint-3xl: 1920px;
+  --color-primary: #3978c2;
+  --color-secondary: #4286d6;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-mono);
+  }
+
+  body {
+    font-family: var(--font-family-mono);
+  }
+}
+
+.input-box {
+  @apply w-full flex justify-between gap-3 text-sm text-black bg-slate-100/50 rounded-lg px-4 py-3 mb-4 mt-3 border border-slate-200 outline-none focus-within:border-primary;
+}
+
+.btn-primary {
+  @apply w-full text-sm font-medium text-white bg-primary shadow-lg shadow-purple-600/5 p-[10px] rounded-md my-1 hover:bg-blue-600/15 hover:text-blue-600 cursor-pointer;
+}
+
+.card {
+  @apply bg-white p-6 rounded-2xl shadow-md shadow-gray-100 border border-gray-200/50 hover:shadow-gray-300;
+}
+
+.card-btn {
+  @apply flex items-center gap-3 text-[12px] font-medium text-gray-700 hover:text-primary bg-gray-50 hover:bg-blue-50 px-4 py-1.5 rounded-lg border border-gray-200/50 cursor-pointer;
+}
+
+.card-btn-fill {
+  @apply flex items-center gap-3 text-[12px] font-medium text-white hover:text-primary bg-primary hover:bg-blue-50 px-4 py-1.5 rounded-lg border border-primary cursor-pointer;
+}
+
+.form-card {
+  @apply bg-white p-6 rounded-lg shadow-md shadow-gray-100 border border-gray-200/50;
+}
+
+.form-input {
+  @apply w-full text-sm text-black outline-none bg-white border border-slate-100 px-2.5 py-3 rounded-md mt-2 placeholder:text-gray-500;
+}
+
+.add-btn {
+  @apply w-full flex items-center justify-center gap-1.5 text-xs md:text-sm font-medium text-primary whitespace-nowrap bg-blue-50 border border-blue-100 rounded-lg px-4 py-2 cursor-pointer;
+}
+
+.download-btn {
+  @apply items-center gap-3 text-xs md:text-[13px] bg-primary/80 hover:bg-primary text-white px-2 md:px-3 py-2 rounded border border-lime-200 hover:border-lime-400 cursor-pointer;
+}
+
+.create-task-btn {
+  @apply items-center gap-3 text-xs md:text-[13px] bg-primary/80 hover:bg-primary text-white px-2 md:px-3 py-2 rounded border border-lime-200 hover:border-lime-400 cursor-pointer;
+}
+
+.user-card {
+  @apply bg-white p-4 rounded-xl shadow-md shadow-gray-100 border border-gray-200/50;
+}
+
+/* Bubble background */
+.bubble-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  top: 0;
+  left: 0;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -100px;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  animation: rise 10s infinite ease-in;
+}
+
+.bubble:nth-child(2) {
+  left: 20%;
+  width: 30px;
+  height: 30px;
+  animation-duration: 15s;
+  animation-delay: 2s
+}
+
+.bubble:nth-child(3) {
+  left: 40%;
+  animation-duration: 20s;
+  animation-delay: 4s;
+}
+.bubble:nth-child(4) {
+  left: 60%;
+  width: 50px;
+  height: 50px;
+  animation-duration: 18s;
+  animation-delay: 1s;
+}
+.bubble:nth-child(5) {
+  left: 80%;
+  width: 25px;
+  height: 25px;
+  animation-duration: 17s;
+  animation-delay: 5s;
+}
+
+.bubble:nth-child(6) {
+  right: 20%;
+  width: 60px;
+  height: 60px;
+  animation-duration: 13s;
+  animation-delay: 3s;
+}
+
+.bubble:nth-child(7) {
+  left: -2%;
+  width: 100px;
+  height: 100px;
+  animation-duration: 21s;
+  animation-delay: 4s;
+}
+
+.bubble:nth-child(8) {
+  left: 105%;
+  width: 90px;
+  height: 90px;
+  animation-duration: 19s;
+  animation-delay: 10s;
+}
+
+
+@keyframes rise {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.1;
+  }
+  30% {
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  60% {
+    opacity: 0.5;
+  }
+  70% {
+    opacity: 0.4;
+  }
+  80% {
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-1200px) scale(1.5);
+    opacity: 0;
+  }
+}
