@@ -39,18 +39,19 @@ const Login = () => {
         password,
       });
 
-      const { token, role } = response.data;
+      const { token } = response.data;
 
       if (token) {
         localStorage.setItem("token", token);
-        updateUser(response.data)
+        updateUser(response.data);
+        navigate("/user/dashboard");
 
         //Redirect based on role
-        if (role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/user/dashboard");
-        }
+        // if (role === "admin") {
+        //   navigate("/admin/dashboard");
+        // } else {
+        //   navigate("/user/dashboard");
+        // }
       }
     } catch (error){
       if (error.response && error.response.data.message) {

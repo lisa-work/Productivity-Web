@@ -20,6 +20,24 @@ const TaskListTable = ({tableData}) => {
     }
   };
 
+const formatDuration = (seconds) => {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+};
+
+  const formatTime = (seconds) => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        const pad = (n) => n.toString().padStart(2, "0");
+        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    };  
+
   return (
     <div className="overflow-x-auto p-0 rounded-lg mt-3">
       <table className="min-w-full">
@@ -28,7 +46,8 @@ const TaskListTable = ({tableData}) => {
             <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Name</th>
             <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Status</th>
             <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Priority</th>
-            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] hidden md:table-cell">Created On</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] hidden md:table-cell">Due Date</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] hidden md:table-cell">Time Tracked</th>
           </tr>
         </thead>
         <tbody>
@@ -41,11 +60,15 @@ const TaskListTable = ({tableData}) => {
               <td className="py-4 px-4">
                 <span className={`px-2 py-1 text-xs rounded inline-block ${getPriorityBadgeColor(task.priority)}`}>{task.priority}</span>
               </td>
-              <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">{task.createdAt ? moment(task.createdAt).format('Do MMM YYYY') : 'N/A'}</td>
+              <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">{task.dueDate ? moment(task.dueDate).format('Do MMM YYYY') : 'N/A'}</td>
+              {/* <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">{task.timeTracked ? formatTime(task.timeTracked) : "00:00:00"}</td> */}
+              {/* <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">{moment.duration(task.timeTracked, "seconds").humanize()}</td> */}
+              
             </tr>
           ))}
         </tbody>
       </table>
+    
     </div>
   )
 }

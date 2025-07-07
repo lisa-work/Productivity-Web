@@ -92,16 +92,16 @@ const CalendarView = ({ allTasks }) => {
 //       filtered = filtered.filter((task) => task.priority === filter.priority);
 //     }
 
-//     const formattedEvents = filtered.map((task) => {
-//       const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
-//       return {
-//         title: task.title + formattedTime,
-//         start: toUTCDate(task.dueDate),
-//         end: toUTCDate(task.dueDate),
-//         allDay: true,
-//         taskData: task,
-//       };
-//     });
+    // const formattedEvents = filtered.map((task) => {
+    //   const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
+    //   return {
+    //     title: task.title + formattedTime,
+    //     start: toUTCDate(task.dueDate),
+    //     end: toUTCDate(task.dueDate),
+    //     allDay: true,
+    //     taskData: task,
+    //   };
+    // });
 
 //     setEvents(formattedEvents); 
 
@@ -126,7 +126,6 @@ useEffect(() => {
     filtered = filtered.filter((task) => task.priority === filter.priority);
   }
 
-
  const formattedEvents = filtered.map((task) => {
   const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
 
@@ -147,8 +146,6 @@ useEffect(() => {
   };
 });
 
-
-
   const timeLogEvents = timeLogs.map((log) => ({
     title: `🕒 ${log.taskTitle}`,
     start: new Date(log.startTime),
@@ -157,7 +154,7 @@ useEffect(() => {
   }));
 
   setEvents([...formattedEvents, ...timeLogEvents]);
-}, [allTasks, filter, timeLogs]); // 👈 include timeLogs in dependency array!
+}, [allTasks, filter, timeLogs]);
 
 
   const handleSelectEvent = (event) => {

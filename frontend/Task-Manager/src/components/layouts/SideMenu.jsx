@@ -26,7 +26,7 @@ const SideMenu = ({ activeMenu }) => {
 
   useEffect(() => {
     if(user){
-      setSideMenuData(user?.role === 'admin' ? SIDE_MENU_DATA : SIDE_MENU_USER_DATA)
+      setSideMenuData(SIDE_MENU_USER_DATA)
     }
     return () => {};
   }, [user]);
@@ -41,11 +41,11 @@ const SideMenu = ({ activeMenu }) => {
           />
         </div>
 
-        {user?.role === "admin" && (
+        {/* {user?.role === "admin" && (
           <div className="text-[10px] font-medium text-white bg-primary px-3 py-0.5 rounded mt-1">
             Admin
           </div>
-        )}
+        )} */}
 
         <h5 className="text-gray-950 font-medium leading-6 mt-3">
           {user?.name || ""}

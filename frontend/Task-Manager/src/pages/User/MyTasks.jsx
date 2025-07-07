@@ -33,6 +33,7 @@ const MyTasks = () => {
       });
 
       setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : []);
+      setTasks(response.data.tasks);
 
       // Map statusSummary data with fixed labels and order
       const statusSummary = response.data?.statusSummary || {};
@@ -95,7 +96,7 @@ const MyTasks = () => {
 
       setOpenDeleteAlert(false);
       toast.success("Task details deleted successfully");
-      navigate('/admin/tasks')
+      navigate('/user/tasks')
     } catch (error) {
       console.error(
         "Error deleting:",
@@ -141,7 +142,7 @@ const MyTasks = () => {
             />
 </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          {allTasks?.map((item, index) => (
+          {tasks?.map((item, index) => (
             <TaskCard
               key={item._id}
               taskId={item._id}

@@ -179,7 +179,7 @@ const CreateUserTask = () => {
 
       setOpenDeleteAlert(false);
       toast.success("Task details deleted successfully");
-      navigate('/admin/tasks')
+      navigate('/user/tasks')
     } catch (error) {
       console.error(
         "Error deleting:",

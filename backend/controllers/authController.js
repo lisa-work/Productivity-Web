@@ -12,7 +12,7 @@ const generateToken = (userId) => {
 // @access  Public
 const registerUser = async (req, res) => {
   try {
-    const { name, username, email, password, profileImageUrl, adminInviteToken } =
+    const { name, username, email, password, profileImageUrl } =
       req.body;
 
     // Check if user already exists
@@ -23,12 +23,12 @@ const registerUser = async (req, res) => {
 
     // Determine user role: Admin if correct token is provided, otherwise Member
     let role = "member";
-    if (
-      adminInviteToken &&
-      adminInviteToken == process.env.ADMIN_INVITE_TOKEN
-    ) {
-      role = "admin";
-    }
+    // if (
+    //   adminInviteToken &&
+    //   adminInviteToken == process.env.ADMIN_INVITE_TOKEN
+    // ) {
+    //   role = "admin";
+    // }
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
@@ -41,7 +41,7 @@ const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       profileImageUrl,
-      role,
+      // role,
     });
 
     // Return user data with JWT
@@ -50,7 +50,7 @@ const registerUser = async (req, res) => {
       name: user.name,
       username: user.username,
       email: user.email,
-      role: user.role,
+      // role: user.role,
       profileImageUrl: user.profileImageUrl,
       token: generateToken(user._id),
     });
@@ -83,7 +83,7 @@ const loginUser = async (req, res) => {
       name: user.name,
       username: user.username,
       email: user.email,
-      role: user.role,
+      // role: user.role,
       profileImageUrl: user.profileImageUrl,
       token: generateToken(user._id),
     });
@@ -134,7 +134,7 @@ const updateUserProfile = async (req, res) => {
       name: updatedUser.name,
       username: updatedUser.username,
       email: updatedUser.email,
-      role: updatedUser.role,
+      // role: updatedUser.role,
       token: generateToken(updatedUser._id),
     });
   } catch (error) {

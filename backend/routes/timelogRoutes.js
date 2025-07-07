@@ -4,11 +4,8 @@ const { createTimeLog, getLogsByTaskId, getLogsByRange } = require("../controlle
 
 const router = express.Router();
 
-// Protect time log creation routes
 router.post("/", protect, createTimeLog);
+router.get("/task/:taskId", protect, getLogsByTaskId);
+router.get("/", protect, getLogsByRange);
 
-// Public routes (you can add protect if needed)
-router.get("/task/:taskId", getLogsByTaskId);
-router.get("/", getLogsByRange);
-
-module.exports = router;
+module.exports = router; // ✅ Correct export

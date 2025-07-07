@@ -15,7 +15,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [adminInviteToken, setAdminInviteToken] = useState("");
 
   const [error, setError] = useState(null);
 
@@ -60,21 +59,21 @@ const SignUp = () => {
         email,
         password,
         profileImageUrl,
-        adminInviteToken
       });
 
-      const { token, role } = response.data;
+      const { token } = response.data;
 
       if (token) {
         localStorage.setItem("token", token);
         updateUser(response.data);
+        navigate("/user/dashboard");
 
         //Redirect based on role
-        if (role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/user/dashboard");
-        }
+        // if (role === "admin") {
+        //   navigate("/admin/dashboard");
+        // } else {
+        //   navigate("/user/dashboard");
+        // }
       }
     } catch (error){
       if (error.response && error.response.data.message) {
@@ -129,13 +128,13 @@ const SignUp = () => {
               type="password"
             />
 
-            <Input
+            {/* <Input
               value={adminInviteToken}
               onChange={({ target }) => setAdminInviteToken(target.value)}
               label="Admin Invite Token"
               placeholder="7 Digit Code"
               type="text"
-            />
+            /> */}
           </div>
 
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}

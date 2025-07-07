@@ -136,6 +136,10 @@ const createTask = async (req, res) => {
       todoChecklist,
     } = req.body;
 
+    const creatorId = req.user._id;
+
+    let assignedUsers = Array.isArray(assignedTo) ? assignedTo : [];
+
     if (!Array.isArray(assignedTo)) {
       return res
         .status(400)
@@ -143,11 +147,15 @@ const createTask = async (req, res) => {
     }
 
     // Assign to creator if assignedTo is empty
-    if (assignedTo.length === 0) {
-      assignedTo = [req.user._id]; // fallback to task creator
+    if (assignedUsers.length === 0) {
+      assignedUsers = [req.user._id]; // fallback to task creator
     }
 
-    assignedTo = assignedTo.map((id) => new mongoose.Types.ObjectId(id));
+    if (!assignedUsers.includes(creatorId.toString())) {
+      assignedUsers.push(creatorId.toString());
+    }
+
+    assignedTo = assignedUsers.map((id) => new mongoose.Types.ObjectId(id));
 
     const task = await Task.create({
       title,
@@ -229,9 +237,9 @@ const updateTaskStatus = async (req, res) => {
       (userId) => userId.toString() === req.user._id.toString()
     );
 
-    if (!isAssigned && req.user.role !== "admin") {
-      return res.status(403).json({ message: "Not authorized" });
-    }
+    // if (!isAssigned && req.user.role !== "admin") {
+    //   return res.status(403).json({ message: "Not authorized" });
+    // }
 
     task.status = req.body.status || task.status;
 
@@ -257,11 +265,11 @@ const updateTaskChecklist = async (req, res) => {
 
     if (!task) return res.status(404).json({ message: "Task not found" });
 
-    if (!task.assignedTo.includes(req.user._id) && req.user.role !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to update checklist" });
-    }
+    // if (!task.assignedTo.includes(req.user._id) && req.user.role !== "admin") {
+    //   return res
+    //     .status(403)
+    //     .json({ message: "Not authorized to update checklist" });
+    // }
 
     task.todoChecklist = todoChecklist; // Replace with updated checklist
 
@@ -437,36 +445,58 @@ const getUserDashboardData = async (req, res) => {
 };
 
 // controllers/taskController.js
+// const updateTrackedTime = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { timeTracked: timeIncrement } = req.body;
+
+//     if (typeof timeIncrement !== "number" || timeIncrement < 0) {
+//       return res.status(400).json({ message: "Invalid timeTracked value" });
+//     }
+
+//     const task = await Task.findById(id);
+
+//     if (!task) {
+//       return res.status(404).json({ message: "Task not found" });
+//     }
+
+//     // Add the increment to the existing timeTracked value
+//     task.timeTracked = task.timeTracked || 0
+//     // task.timeTracked = (task.timeTracked || 0) + timeIncrement;
+
+//     await task.save();
+
+//     res.json({ message: "Time tracked incremented", task });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 const updateTrackedTime = async (req, res) => {
   try {
     const { id } = req.params;
-    const { timeTracked: timeIncrement } = req.body;
+    const { timeTracked } = req.body;
 
-    if (typeof timeIncrement !== "number" || timeIncrement < 0) {
+    if (typeof timeTracked !== "number" || timeTracked < 0) {
       return res.status(400).json({ message: "Invalid timeTracked value" });
     }
 
     const task = await Task.findById(id);
-
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    // Add the increment to the existing timeTracked value
-    task.timeTracked = (task.timeTracked || 0) + timeIncrement;
+    // ✅ Set the tracked time instead of incrementing
+    task.timeTracked = timeTracked;
 
     await task.save();
 
-    res.json({ message: "Time tracked incremented", task });
+    res.json({ message: "Time tracked updated", task });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-
-module.exports = {
-  updateTrackedTime,
-};
 
 module.exports = {
   getTasks,

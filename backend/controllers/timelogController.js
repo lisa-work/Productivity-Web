@@ -9,14 +9,6 @@ const {
   endOfMonth,
 } = require("date-fns");
 
-exports.createTimeLog = async (req, res) => {
-  const { taskId, startTime, endTime, duration } = req.body;
-  const userId = req.user._id;
-
-  const log = await TimeLog.create({ taskId, userId, startTime, endTime, duration });
-  res.status(201).json({ log });
-};
-
 exports.getLogsByTaskId = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -42,12 +34,15 @@ exports.getLogsByTaskId = async (req, res) => {
 exports.createTimeLog = async (req, res) => {
   try {
     const { taskId, startTime, endTime } = req.body;
+    const userId = req.user._id;
+
     if (!taskId || !startTime || !endTime) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     const duration = Math.floor((new Date(endTime) - new Date(startTime)) / 1000);
-    const newLog = await TimeLog.create({ taskId, startTime, endTime, duration });
+
+    const newLog = await TimeLog.create({ taskId, userId, startTime, endTime, duration });
 
     res.status(201).json({ message: "Time log created", log: newLog });
   } catch (err) {
@@ -58,34 +53,18 @@ exports.createTimeLog = async (req, res) => {
 
 exports.getLogsByRange = async (req, res) => {
   try {
-    const { range } = req.query;
-    const now = new Date();
+    const { start, end, groupBy } = req.query;
+    const userId = req.user._id;
 
-    let fromDate = new Date();
-    let toDate = new Date();
-
-    switch (range) {
-      case "daily":
-        fromDate = startOfDay(now);
-        toDate = endOfDay(now);
-        break;
-      case "weekly":
-        fromDate = startOfWeek(now);
-        toDate = endOfWeek(now);
-        break;
-      case "monthly":
-        fromDate = startOfMonth(now);
-        toDate = endOfMonth(now);
-        break;
-      default:
-        return res.status(400).json({ message: "Invalid range" });
-    }
+    const fromDate = start ? new Date(start) : new Date("2000-01-01");
+    const toDate = end ? new Date(end) : new Date();
 
     const logs = await TimeLog.find({
+      userId,
       startTime: { $gte: fromDate, $lte: toDate },
     }).populate("taskId", "title").sort({ startTime: -1 });
 
-    const formattedLogs = logs.map((log) => ({
+    const formattedLogs = logs.map(log => ({
       _id: log._id,
       task: log.taskId,
       startTime: log.startTime,
@@ -95,10 +74,12 @@ exports.getLogsByRange = async (req, res) => {
 
     res.json({ logs: formattedLogs });
   } catch (err) {
-    console.error("Error getting logs by range:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error fetching time logs:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
 
 const getStartEndByRange = (range) => {
   const now = new Date();
@@ -108,26 +89,5 @@ const getStartEndByRange = (range) => {
     return [startOfWeek(now), endOfWeek(now)];
   } else {
     return [startOfMonth(now), endOfMonth(now)];
-  }
-};
-
-exports.getLogsByRange = async (req, res) => {
-  try {
-    const { range } = req.query;
-    let timeLogs;
-
-    if (!range) {
-      // Return all logs if no range specified
-      timeLogs = await TimeLog.find();
-    } else {
-      const [start, end] = getStartEndByRange(range);
-      timeLogs = await TimeLog.find({
-        startTime: { $gte: start, $lte: end },
-      });
-    }
-
-    res.json({ timeLogs });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
   }
 };
