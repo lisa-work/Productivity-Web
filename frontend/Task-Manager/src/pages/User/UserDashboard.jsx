@@ -14,6 +14,7 @@ import TaskListTable from "../../components/TaskListTable";
 import CustomPieChart from "../../components/Charts/CustomPieChart";
 import CustomBarChart from "../../components/Charts/CustomBarChart";
 import DashboardAddons from "../Tracker/DashboardAddons";
+import CalendarView from "../Tracker/CalendarView";
 
 const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
@@ -28,6 +29,8 @@ const UserDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [pieChartData, setPieChartData] = useState([]);
   const [barChartData, setBarChartData] = useState([]);
+
+  const [allTasks, setAllTasks] = useState([]);
 
 
   // Prepare Chart Data
@@ -66,12 +69,23 @@ const UserDashboard = () => {
     }
   };
 
+  const getAllTasks = async () => {
+    try {
+      const response = await axiosInstance.get(API_PATHS.TASKS.GET_ALL_TASKS);
+      // Extract tasks array, fallback to empty array
+      setAllTasks(response.data?.tasks || []);
+    } catch (error) {
+      console.error("Error fetching all tasks:", error);
+    }
+  };
+
   const onSeeMore = ()=>{
     navigate('/admin/tasks')
   }
 
   useEffect(() => {
     getDashboardData();
+    getAllTasks();
 
     return () => {};
   }, []);
@@ -127,6 +141,10 @@ const UserDashboard = () => {
         <DashboardAddons/>
       </div>
 
+      <div className="card mt-5">
+        <h4 className="text-xl md:text-2xl text-primary font-bold mb-3">Task Calendar</h4>
+        <CalendarView allTasks={allTasks} />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
         
         <div>
