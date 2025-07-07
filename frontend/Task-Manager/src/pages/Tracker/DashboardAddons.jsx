@@ -17,14 +17,14 @@ const DashboardAddons = () => {
       const updated = [...goals, { text: newGoal.trim(), checked: false }]
       setGoals(updated);
       setNewGoal("");
-      await axiosInstance.put("/api/user-addons", { goals: updated });
+      await axiosInstance.put("/api/user-addons", { goals: updated, quickNotes });
     }
   };
 
   const removeGoal = async (index) => {
     const updated = goals.filter((_, i) => i !== index);
     setGoals(updated);
-    await axiosInstance.put("/api/user-addons", { goals: updated });
+    await axiosInstance.put("/api/user-addons", { goals: updated, quickNotes });
   };
 
   const toggleGoalChecked = async (index) => {
@@ -32,8 +32,18 @@ const DashboardAddons = () => {
       i === index ? { ...goal, checked: !goal.checked } : goal
     );
     setGoals(updated);
-    await axiosInstance.put("/api/user-addons", { goals: updated });
+    await axiosInstance.put("/api/user-addons", { goals: updated, quickNotes });
   };
+
+  useEffect(() => {
+  const timeout = setTimeout(() => {
+    axiosInstance.put("/api/user-addons", {
+      goals,
+      quickNotes,
+    });
+  }, 800);
+  return () => clearTimeout(timeout);
+}, [goals, quickNotes]);
 
   useEffect(() => {
   const fetchData = async () => {
