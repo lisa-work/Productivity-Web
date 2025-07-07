@@ -13,6 +13,7 @@ import { LuArrowRight } from "react-icons/lu";
 import TaskListTable from "../../components/TaskListTable";
 import CustomPieChart from "../../components/Charts/CustomPieChart";
 import CustomBarChart from "../../components/Charts/CustomBarChart";
+import DashboardAddons from "../Tracker/DashboardAddons";
 
 const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
@@ -120,6 +121,10 @@ const UserDashboard = () => {
             color="bg-lime-500"
           />
         </div>
+      </div>
+
+      <div>
+        <DashboardAddons/>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">

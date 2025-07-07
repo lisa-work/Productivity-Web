@@ -7,6 +7,9 @@ import { LuFileSpreadsheet } from "react-icons/lu";
 import TaskStatusTabs from "../../components/TaskStatusTabs";
 import TaskCard from "../../components/Cards/TaskCard";
 import { IoMdAdd } from "react-icons/io";
+import Modal from "../../components/Modal";
+import DeleteAlert from "../../components/DeleteAlert";
+import toast from "react-hot-toast";
 
 const MyTasks = () => {
 
@@ -14,6 +17,9 @@ const MyTasks = () => {
 
   const [tabs, setTabs] = useState([]);
   const [filterStatus, setFilterStatus] = useState("All");
+
+  const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
+  const [taskIdToDelete, setTaskIdToDelete] = useState(null);
 
   const navigate = useNavigate();
 
@@ -43,6 +49,8 @@ const MyTasks = () => {
     }
   };
 
+
+
     const handleDownloadReport = async () => {
       try {
         const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS, {
@@ -67,6 +75,25 @@ const MyTasks = () => {
   const handleClick = (taskId) => {
     navigate(`/user/task-details/${taskId}`);
   };
+
+  const handleEditClick = (taskData) => {
+    navigate(`/admin/create-task`, { state: { taskId: taskData._id } });
+  };
+
+  const deleteTask = async (taskId) => {
+    try {
+      await axiosInstance.delete(API_PATHS.TASKS.DELETE_TASK(taskId));
+
+      setOpenDeleteAlert(false);
+      toast.success("Task details deleted successfully");
+      navigate('/admin/tasks')
+    } catch (error) {
+      console.error(
+        "Error deleting:",
+        error.response?.data?.message || error.message
+      );
+    }
+  };  
 
   useEffect(() => {
     getAllTasks(filterStatus);
@@ -122,10 +149,27 @@ const MyTasks = () => {
               onClick={() => {
                 handleClick(item._id);
               }}
+              onEdit={() => handleEditClick(item)}
+              onDelete={() => {
+                setTaskIdToDelete(item._id);
+                setOpenDeleteAlert(true);
+              }}
             />
           ))}
         </div>
       </div>
+
+      <Modal
+        isOpen={openDeleteAlert}
+        onClose={() => setOpenDeleteAlert(false)}
+        title="Delete Task"
+      >
+        <DeleteAlert
+          content="Are you sure you want to delete this task?"
+          onDelete={() => deleteTask(taskIdToDelete)}
+        />
+      </Modal>
+
     </DashboardLayout>
   );
 };

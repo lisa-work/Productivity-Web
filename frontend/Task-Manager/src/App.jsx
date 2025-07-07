@@ -15,6 +15,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import UserProvider, { UserContext } from "./context/userContext";
 import { Toaster } from "react-hot-toast";
 import CreateUserTask from "./pages/User/CreateUserTask";
+import TimeTracker from "./pages/User/TimeTracker";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
               <Route path="/user/dashboard" element={<UserDashboard />} />
               <Route path="/user/tasks" element={<MyTasks />} />
               <Route path="/user/create-task" element={<CreateUserTask />} />
+              <Route path="/user/time-tracker" element={<TimeTracker />} />
               <Route
                 path="/user/task-details/:id"
                 element={<ViewTaskDetails />}

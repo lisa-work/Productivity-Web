@@ -22,6 +22,8 @@ const TaskCard = ({
   completedTodoCount,
   todoChecklist,
   onClick,
+  onEdit,
+  onDelete
 }) => {
   const getStatusTagColor = () => {
     switch (status) {
@@ -69,6 +71,10 @@ const TaskCard = ({
         </div>
         <div
           className={`text-[11px] font-medium px-4 py-0.5 rounded text-blue-500 bg-blue-50 border border-blue-500/10`}
+          onClick={(e) => {
+            e.stopPropagation(); // prevent triggering the card's onClick
+            onEdit && onEdit();
+          }}
         >
           Edit
         </div>
@@ -106,14 +112,14 @@ const TaskCard = ({
           <div>
             <label className="text-xs text-gray-500">Start Date</label>
             <p className="text-[13px] font-medium text-gray-900">
-              {moment(createdAt).format("Do MMM YYYY")}
+              {moment.utc(createdAt).format("Do MMM YYYY")}
             </p>
           </div>
 
           <div>
             <label className="text-xs text-gray-500">Due Date</label>
             <p className="text-[13px] font-medium text-gray-900">
-              {moment(dueDate).format("Do MMM YYYY")}
+              {moment.utc(dueDate).format("Do MMM YYYY")}
             </p>
           </div>
         </div>
@@ -127,6 +133,14 @@ const TaskCard = ({
               <span className="text-xs text-gray-900">{attachmentCount}</span>
             </div>
           )}
+
+          <div>
+            <MdDelete className="text-2xl text-red-200 hover:text-red-400" onClick={(e) => {
+              e.stopPropagation(); // prevent triggering the card's onClick
+              onDelete && onDelete();
+            }}/>
+          </div>
+
         </div>
       </div>
     </div>

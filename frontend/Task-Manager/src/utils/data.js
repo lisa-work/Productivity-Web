@@ -6,7 +6,10 @@ import {
     LuLogOut,
   
   } from "react-icons/lu";
-  
+import { IoTimeOutline } from "react-icons/io5";
+import { CiMoneyCheck1 } from "react-icons/ci";
+import { RxCountdownTimer } from "react-icons/rx";
+import { GiArtificialHive } from "react-icons/gi";
   
   export const SIDE_MENU_DATA = [
     {
@@ -55,7 +58,31 @@ import {
       path: "/user/tasks",
     },
     {
+      id: "03",
+      label: "Time Tracker",
+      icon: IoTimeOutline,
+      path: "/user/time-tracker",
+    },
+    {
+      id: "04",
+      label: "Expense Tracker",
+      icon: CiMoneyCheck1,
+      path: "/user/expense-tracker",
+    },
+    {
       id: "05",
+      label: "Countdown",
+      icon: RxCountdownTimer,
+      path: "/user/countdown",
+    },
+    {
+      id: "06",
+      label: "AI Assistant",
+      icon: GiArtificialHive,
+      path: "/user/ai-assistant",
+    },
+    {
+      id: "06",
       label: "Logout",
       icon: LuLogOut,
       path: "logout",
