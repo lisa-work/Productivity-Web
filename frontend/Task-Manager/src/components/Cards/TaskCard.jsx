@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Progress from "../Progress";
 import AvatarGroup from "../AvatarGroup";
 import { LuPaperclip } from "react-icons/lu";
@@ -111,37 +111,86 @@ const [loading, setLoading] = useState(false);
 //   }
 // };
 
+// const handleToggleTimer = async (e) => {
+//   e.stopPropagation();
+
+//   const nextState = !isRunning;
+//   setIsRunning(nextState);
+
+//   if (!nextState) {
+//     // Timer stopped, save tracked time
+//     setLoading(true);
+//     try {
+//       const res = await axiosInstance.put(`/api/tasks/${taskId}/track-time`, {
+//         timeTracked: seconds,
+//       });
+
+//       const newTime = res.data.task.timeTracked;
+
+//       // Immediately update local seconds state
+//       setSeconds(newTime);
+
+//       // Notify parent component of the new timeTracked value
+//       if (onTimeUpdate) {
+//         onTimeUpdate(taskId, newTime);
+//       }
+//     } catch (error) {
+//       console.error("Failed to update time tracked:", error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+// };
+
+const [startTime, setStartTime] = useState(null);
+const startTimeRef = useRef(null);
+
 const handleToggleTimer = async (e) => {
   e.stopPropagation();
 
   const nextState = !isRunning;
   setIsRunning(nextState);
 
-  if (!nextState) {
-    // Timer stopped, save tracked time
+  if (nextState) {
+    // Timer is starting
+    setStartTime(new Date()); // Save the start time
+  } else {
+    // Timer is stopping
+    const endTime = new Date();
+    const duration = Math.floor((endTime - startTime) / 1000); // seconds elapsed this session
+    const updatedTotalSeconds = seconds + duration; // add to previous tracked time
+
     setLoading(true);
     try {
+      // 1. Save new time log for this session
+      await axiosInstance.post(`/api/time-logs`, {
+        taskId,
+        startTime,
+        endTime,
+        duration,
+      });
+
+      // 2. Update total tracked time for the task in backend
       const res = await axiosInstance.put(`/api/tasks/${taskId}/track-time`, {
-        timeTracked: seconds,
+        timeTracked: updatedTotalSeconds,
       });
 
       const newTime = res.data.task.timeTracked;
 
-      // Immediately update local seconds state
+      // 3. Update local UI immediately
       setSeconds(newTime);
 
-      // Notify parent component of the new timeTracked value
+      // 4. Notify parent component
       if (onTimeUpdate) {
         onTimeUpdate(taskId, newTime);
       }
     } catch (error) {
-      console.error("Failed to update time tracked:", error);
+      console.error("Failed to update time log or tracked time:", error);
     } finally {
       setLoading(false);
     }
   }
 };
-
 
   const formatTime = (totalSeconds) => {
     const hrs = Math.floor(totalSeconds / 3600);

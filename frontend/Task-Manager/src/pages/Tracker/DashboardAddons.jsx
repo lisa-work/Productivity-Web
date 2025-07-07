@@ -130,13 +130,13 @@ const DashboardAddons = () => {
       {/* Upcoming Due Tasks */}
       <div className="card">
         <h4 className="text-lg font-semibold mb-2 text-primary">Upcoming Due Tasks</h4>
-        <div className="flex mb-2">
+        <div className="flex mb-3">
         <ul className="list-disc pl-5 text-sm overflow-auto cursor-pointer">
           {upcomingTasks.map((task) => (
            <li
               key={task._id}
               onClick={() => handleClick(task._id)}
-              className="group underline underline-offset-2 cursor-pointer my-2 hover:text-secondary"
+              className="group underline underline-offset-2 cursor-pointer my-2 hover:text-secondary leading-6"
             >
               {task.title} —{" "}
               <span className="text-xs text-gray-500 group-hover:text-secondary">
@@ -153,7 +153,7 @@ const DashboardAddons = () => {
         <h4 className="text-lg font-semibold mb-2 text-primary">Quick Notes</h4>
         <textarea
           rows="10"
-          className="form-input w-full resize-none"
+          className="form-input w-full resize-none leading-6"
           placeholder="Jot something down..."
           value={quickNotes}
           onChange={(e) => setQuickNotes(e.target.value)}

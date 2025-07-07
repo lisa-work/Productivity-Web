@@ -63,24 +63,24 @@ import { GiArtificialHive } from "react-icons/gi";
       icon: IoTimeOutline,
       path: "/user/time-tracker",
     },
-    {
-      id: "04",
-      label: "Expense Tracker",
-      icon: CiMoneyCheck1,
-      path: "/user/expense-tracker",
-    },
+    // {
+    //   id: "04",
+    //   label: "Expense Tracker",
+    //   icon: CiMoneyCheck1,
+    //   path: "/user/expense-tracker",
+    // },
     {
       id: "05",
       label: "Countdown",
       icon: RxCountdownTimer,
       path: "/user/countdown",
     },
-    {
-      id: "06",
-      label: "AI Assistant",
-      icon: GiArtificialHive,
-      path: "/user/ai-assistant",
-    },
+    // {
+    //   id: "06",
+    //   label: "AI Assistant",
+    //   icon: GiArtificialHive,
+    //   path: "/user/ai-assistant",
+    // },
     {
       id: "06",
       label: "Logout",

@@ -11,6 +11,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import Modal from "../../components/Modal";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../utils/axiosInstance";
 
 const locales = {
   "en-US": enUS,
@@ -37,6 +38,13 @@ const CalendarView = ({ allTasks }) => {
   const [filter, setFilter] = useState({ status: "All", priority: "All" });
   const [selectedDate, setSelectedDate] = useState(startOfDay(new Date()));
 
+  const toUTCDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+  );
+  };
+
   const handleNavigate = (date) => {
     setCurrentDate(date);
   };
@@ -48,7 +56,7 @@ const CalendarView = ({ allTasks }) => {
   const formatLocalDate = (dateStr) => {
     if (!dateStr) return "";
     const date = new Date(dateStr);
-    return date.toLocaleDateString();
+    return date.toUTCString();
   };
 
   const getTimeTrackedByDate = (tasks) => {
@@ -60,29 +68,97 @@ const CalendarView = ({ allTasks }) => {
     return result;
 };
 
-  useEffect(() => {
-    let filtered = Array.isArray(allTasks) ? allTasks : [];
+    const [timeLogs, setTimeLogs] = useState([]);
+    useEffect(() => {
+      const fetchTimeLogs = async () => {
+        try {
+          const res = await axiosInstance.get("/api/time-logs"); // or add query params for filtering
+          setTimeLogs(res.data.timeLogs || []); // adjust based on your backend response shape
+        } catch (error) {
+          console.error("Failed to fetch time logs:", error);
+        }
+      };
 
-    if (filter.status !== "All") {
-      filtered = filtered.filter((task) => task.status === filter.status);
-    }
-    if (filter.priority !== "All") {
-      filtered = filtered.filter((task) => task.priority === filter.priority);
-    }
+      fetchTimeLogs();
+    }, []);
 
-    const formattedEvents = filtered.map((task) => {
-        const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
-        return {
-            title: task.title + formattedTime,
-            start: new Date(task.dueDate),
-            end: new Date(task.dueDate),
-            allDay: true,
-            taskData: task,
-        };
-    });
-    setEvents(formattedEvents); 
+//   useEffect(() => {
+//     let filtered = Array.isArray(allTasks) ? allTasks : [];
 
-}, [allTasks, filter]);
+//     if (filter.status !== "All") {
+//       filtered = filtered.filter((task) => task.status === filter.status);
+//     }
+//     if (filter.priority !== "All") {
+//       filtered = filtered.filter((task) => task.priority === filter.priority);
+//     }
+
+//     const formattedEvents = filtered.map((task) => {
+//       const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
+//       return {
+//         title: task.title + formattedTime,
+//         start: toUTCDate(task.dueDate),
+//         end: toUTCDate(task.dueDate),
+//         allDay: true,
+//         taskData: task,
+//       };
+//     });
+
+//     setEvents(formattedEvents); 
+
+//     const timeLogEvents = timeLogs.map((log) => ({
+//       title: `🕒 ${log.taskTitle}`, // or get task title from populated task
+//       start: toUTCDate(log.startTime),
+//       end: toUTCDate(log.endTime),
+//       allDay: false,
+//     }));
+
+//     setEvents([...formattedEvents, ...timeLogEvents]);
+
+// }, [allTasks, filter]);
+
+useEffect(() => {
+  let filtered = Array.isArray(allTasks) ? allTasks : [];
+
+  if (filter.status !== "All") {
+    filtered = filtered.filter((task) => task.status === filter.status);
+  }
+  if (filter.priority !== "All") {
+    filtered = filtered.filter((task) => task.priority === filter.priority);
+  }
+
+
+ const formattedEvents = filtered.map((task) => {
+  const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
+
+  const dueDate = new Date(task.dueDate);
+  // Shift 1 day later
+  const shiftedDate = new Date(
+    dueDate.getFullYear(),
+    dueDate.getMonth(),
+    dueDate.getDate() + 1
+  );
+
+  return {
+    title: task.title + formattedTime,
+    start: shiftedDate,
+    end: shiftedDate,
+    allDay: true,
+    taskData: task,
+  };
+});
+
+
+
+  const timeLogEvents = timeLogs.map((log) => ({
+    title: `🕒 ${log.taskTitle}`,
+    start: new Date(log.startTime),
+    end: new Date(log.endTime),
+    allDay: false,
+  }));
+
+  setEvents([...formattedEvents, ...timeLogEvents]);
+}, [allTasks, filter, timeLogs]); // 👈 include timeLogs in dependency array!
+
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event.taskData);
@@ -119,8 +195,8 @@ const CalendarView = ({ allTasks }) => {
 
   const filteredTasksForDate = selectedDate
     ? tasksArray.filter((task) => {
-        const due = startOfDay(new Date(task.dueDate));
-        const selected = startOfDay(selectedDate);
+        const due = toUTCDate(task.dueDate);
+        const selected = toUTCDate(selectedDate);
         return due.getTime() === selected.getTime() || due > selected;
       })
     : [];
@@ -171,7 +247,7 @@ const CalendarView = ({ allTasks }) => {
         </button>
 
         <div className="text-lg font-semibold select-none">
-          {currentDate.toLocaleDateString("en-US", {
+          {currentDate.toUTCString("en-US", {
             year: "numeric",
             month: "long",
           })}
@@ -205,7 +281,7 @@ const CalendarView = ({ allTasks }) => {
       {/* Tasks list */}
       <div className="mt-6">
         <h3 className="text-lg font-semibold mb-3">
-          Tasks for {selectedDate.toLocaleDateString()} and Upcoming
+          Tasks for {selectedDate.toUTCString()} and Upcoming
         </h3>
         {filteredTasksForDate.length === 0 ? (
           <p>No upcoming tasks found.</p>
@@ -244,7 +320,7 @@ const CalendarView = ({ allTasks }) => {
             <div>
               <h2 className="text-xl font-semibold mb-2">Create New Task</h2>
               <p className="text-sm">
-                Selected Date: {selectedDate?.toLocaleDateString()}
+                Selected Date: {selectedDate?.toUTCString()}
               </p>
               {/* You can embed TaskForm here */}
             </div>
