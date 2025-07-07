@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 const MyTasks = () => {
 
   const [allTasks, setAllTasks] = useState([]);
+  const [tasks, setTasks] = useState(allTasks || []);
 
   const [tabs, setTabs] = useState([]);
   const [filterStatus, setFilterStatus] = useState("All");
@@ -47,6 +48,14 @@ const MyTasks = () => {
     } catch (error) {
       console.error("Error fetching users:", error);
     }
+  };
+
+  const handleTimeUpdate = (taskId, newTimeTracked) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task._id === taskId ? { ...task, timeTracked: newTimeTracked } : task
+      )
+    );
   };
 
 
@@ -135,6 +144,7 @@ const MyTasks = () => {
           {allTasks?.map((item, index) => (
             <TaskCard
               key={item._id}
+              taskId={item._id}
               title={item.title}
               description={item.description}
               priority={item.priority}
@@ -142,6 +152,8 @@ const MyTasks = () => {
               progress={item.progress}
               createdAt={item.createdAt}
               dueDate={item.dueDate}
+              timeTracked={item.timeTracked}
+              onTimeUpdate={handleTimeUpdate}
               assignedTo={item.assignedTo?.map((item) => item.profileImageUrl)}
               attachmentCount={item.attachments?.length || 0}
               completedTodoCount={item.completedTodoCount || 0}

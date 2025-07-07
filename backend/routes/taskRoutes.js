@@ -1,6 +1,6 @@
 const express = require("express");
 const { protect, adminOnly } = require("../middlewares/authMiddleware");
-const { getDashboardData, getUserDashboardData, getTaskById, getTasks, createTask, updateTask, deleteTask, updateTaskStatus, updateTaskChecklist } = require("../controllers/taskController");
+const { getDashboardData, getUserDashboardData, getTaskById, getTasks, createTask, updateTask, deleteTask, updateTaskStatus, updateTaskChecklist, updateTrackedTime } = require("../controllers/taskController");
 
 const router = express.Router();
 
@@ -14,5 +14,6 @@ router.put("/:id", protect, updateTask); // Update task details
 router.delete("/:id", protect, deleteTask); // 
 router.put("/:id/status", protect, updateTaskStatus); // Update task status
 router.put("/:id/todo", protect, updateTaskChecklist); // Update task checklist
+router.put('/:id/track-time', protect, updateTrackedTime); // Update time tracked for a task
 
 module.exports = router;

@@ -51,6 +51,15 @@ const CalendarView = ({ allTasks }) => {
     return date.toLocaleDateString();
   };
 
+  const getTimeTrackedByDate = (tasks) => {
+    const result = {};
+    tasks.forEach((task) => {
+        const date = new Date(task.createdAt).toDateString(); // or task.dueDate
+        result[date] = (result[date] || 0) + (task.timeTracked || 0);
+    });
+    return result;
+};
+
   useEffect(() => {
     let filtered = Array.isArray(allTasks) ? allTasks : [];
 
@@ -61,21 +70,19 @@ const CalendarView = ({ allTasks }) => {
       filtered = filtered.filter((task) => task.priority === filter.priority);
     }
 
-    const formattedEvents = filtered.map((task) => ({
-      title: task.title,
-      start: new Date(task.dueDate),
-      end: new Date(task.dueDate),
-      allDay: true,
-      taskData: task,
-    }));
+    const formattedEvents = filtered.map((task) => {
+        const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
+        return {
+            title: task.title + formattedTime,
+            start: new Date(task.dueDate),
+            end: new Date(task.dueDate),
+            allDay: true,
+            taskData: task,
+        };
+    });
+    setEvents(formattedEvents); 
 
-    setEvents(formattedEvents);
-  }, [allTasks, filter]);
-
-  // const handleSelectEvent = (event) => {
-  //   setSelectedEvent(event.taskData);
-  //   setShowModal(true);
-  // };
+}, [allTasks, filter]);
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event.taskData);
@@ -118,6 +125,15 @@ const CalendarView = ({ allTasks }) => {
       })
     : [];
 
+    const formatTime = (seconds) => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        const pad = (n) => n.toString().padStart(2, "0");
+        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    };   
+  
   return (
     <div className="p-4 bg-white rounded-xl shadow">
       {/* Filters */}
@@ -202,7 +218,7 @@ const CalendarView = ({ allTasks }) => {
                 onClick={() => handleClick(task._id)}
               >
                 <strong>{task.title}</strong> — Due{" "}
-                {formatLocalDate(task.dueDate)} — Status: {task.status} — Time Tracked: {task.trackedSeconds ? formatTime(task.trackedSeconds) : "00:00:00"}
+                {formatLocalDate(task.dueDate)} — Status: {task.status} — Time Tracked: {task.timeTracked ? formatTime(task.timeTracked) : "00:00:00"}
               </li>
             ))}
           </ul>

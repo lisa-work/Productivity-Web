@@ -16,7 +16,8 @@ const taskSchema = new mongoose.Schema(
         createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         attachments: [{ type: String }],
         todoChecklist: [todoSchema], 
-        progress: { type: Number, default: 0 }
+        progress: { type: Number, default: 0 },
+        timeTracked: { type: Number, default: 0 } // in seconds
         
     },
     { timestamps: true }

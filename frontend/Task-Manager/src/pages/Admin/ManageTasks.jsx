@@ -111,6 +111,8 @@ const ManageTasks = () => {
             <TaskCard
               key={item._id}
               title={item.title}
+              timeTracked={item.timeTracked}
+              taskId={item._id}
               description={item.description}
               priority={item.priority}
               status={item.status}

@@ -436,6 +436,38 @@ const getUserDashboardData = async (req, res) => {
   }
 };
 
+// controllers/taskController.js
+const updateTrackedTime = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { timeTracked: timeIncrement } = req.body;
+
+    if (typeof timeIncrement !== "number" || timeIncrement < 0) {
+      return res.status(400).json({ message: "Invalid timeTracked value" });
+    }
+
+    const task = await Task.findById(id);
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    // Add the increment to the existing timeTracked value
+    task.timeTracked = (task.timeTracked || 0) + timeIncrement;
+
+    await task.save();
+
+    res.json({ message: "Time tracked incremented", task });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+module.exports = {
+  updateTrackedTime,
+};
+
 module.exports = {
   getTasks,
   getTaskById,
@@ -446,4 +478,5 @@ module.exports = {
   updateTaskChecklist,
   getDashboardData,
   getUserDashboardData,
+  updateTrackedTime
 };

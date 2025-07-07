@@ -87,8 +87,13 @@ const UserDashboard = () => {
     getDashboardData();
     getAllTasks();
 
-    return () => {};
+    window.refreshTasks = getAllTasks;
+
+    return () => {
+      delete window.refreshTasks;
+    };
   }, []);
+
 
   return (
     <DashboardLayout activeMenu="Dashboard">
