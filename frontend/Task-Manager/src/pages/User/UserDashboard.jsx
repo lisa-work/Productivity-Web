@@ -162,15 +162,16 @@ useEffect(() => {
           <div
             key={event._id}
             className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
-            style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
+            // style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
+            style={{ backgroundImage: `url('/placeholder.jpg')` }}
           >
-            <div className="absolute inset-0 bg-black/40 rounded-xl" />
+            <div className="absolute inset-0 bg-black/20 rounded-xl" />
             <div className="relative z-10 flex flex-col justify-between h-full">
-              <div>
-                <h4 className="font-bold">{event.eventName}</h4>
-                <p className="text-lg">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
-                <p className="text-sm">{moment(event.eventDate).format("MMM D, YYYY")}</p>
-              </div>
+                    <div className="space-y-3">
+                      <h4 className="font-extrabold text-lg">{event.eventName}</h4>
+                      <p className="text-3xl font-bold">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
+                      <p className="text-sm font-bold">{moment(event.eventDate).format("MMM D, YYYY")}</p>
+                    </div>
             </div>
           </div>
         );

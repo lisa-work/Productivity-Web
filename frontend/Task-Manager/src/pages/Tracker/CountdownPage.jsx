@@ -3,6 +3,10 @@ import axiosInstance from "../../utils/axiosInstance";
 import moment from "moment";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import toast from "react-hot-toast";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline } from "react-icons/md";
+import { MdBookmarkRemove } from "react-icons/md";
+import { IoMdBookmark } from "react-icons/io";
 
 // 🟢 Countdown form modal for create/edit
 const CountdownFormModal = ({ onClose, onSuccess, event }) => {
@@ -61,12 +65,36 @@ const CountdownFormModal = ({ onClose, onSuccess, event }) => {
             onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
             required
           />
-          <input
+          {/* <input
             type="file"
             className="w-full"
             onChange={(e) => setImage(e.target.files[0])}
             accept="image/*"
-          />
+          /> */}
+          
+<div className="flex items-center gap-3">
+  <label
+    htmlFor="eventImage"
+    className="px-4 py-2 bg-primary/80 text-white rounded shadow hover:bg-primary cursor-pointer"
+  >
+    Choose Image
+  </label>
+
+  <input
+    id="eventImage"
+    type="file"
+    accept="image/*"
+    className="sr-only"
+    onChange={(e) => setImage(e.target.files[0])}
+  />
+
+  {image ? (
+    <span className="text-gray-800 truncate">{image.name}</span>
+  ) : (
+    <span className="text-gray-400 italic">No file chosen</span>
+  )}
+</div>
+
           <div className="flex justify-end gap-2">
             <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">
               Cancel
@@ -118,7 +146,7 @@ const CountdownPage = () => {
     <DashboardLayout activeMenu="Countdown">
       <div className="p-5 my-5">
         <div className="flex justify-between items-center mb-5">
-          <h1 className="text-xl md:text-2xl font-medium">My Countdown Events</h1>
+          <h1 className="text-xl md:text-xl font-medium">My Countdown Events</h1>
           <button
             onClick={() => setShowModal(true)}
             className="bg-primary/80 text-white px-4 py-2 rounded hover:bg-primary cursor-pointer"
@@ -137,14 +165,15 @@ const CountdownPage = () => {
                 <div
                   key={event._id}
                   className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
-                  style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
+                //   style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
+                style={{ backgroundImage: `url('/placeholder.jpg')` }}
                 >
-                  <div className="absolute inset-0 bg-black/40 rounded-xl z-0" />
+                  <div className="absolute inset-0 bg-black/20 rounded-xl z-0" />
                   <div className="relative z-10 flex flex-col justify-between h-full">
                     <div className="space-y-3">
-                      <h4 className="font-bold text-lg">{event.eventName}</h4>
-                      <p className="text-2xl">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
-                      <p className="text-sm">{moment(event.eventDate).format("MMM D, YYYY")}</p>
+                      <h4 className="font-extrabold text-lg">{event.eventName}</h4>
+                      <p className="text-3xl font-bold">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
+                      <p className="text-sm font-bold">{moment(event.eventDate).format("MMM D, YYYY")}</p>
                     </div>
                     <div className="flex gap-2 mt-2">
   <button
@@ -155,7 +184,7 @@ const CountdownPage = () => {
     title="Edit"
     className="bg-green-100 text-black px-3 py-1 rounded shadow hover:bg-green-200 text-sm cursor-pointer"
   >
-    Edit
+    <CiEdit />
   </button>
 
   <button
@@ -163,7 +192,7 @@ const CountdownPage = () => {
     title="Delete"
     className="bg-red-500 text-white px-3 py-1 rounded shadow hover:bg-red-600 text-sm cursor-pointer"
   >
-    Delete
+    <MdDeleteOutline />
   </button>
 
   <button
@@ -175,7 +204,7 @@ const CountdownPage = () => {
         : "bg-blue-100 text-black hover:bg-gray-400 text-sm cursor-pointer"
     }`}
   >
-    {event.addedToDashboard ? "Remove" : "Add to Dashboard"}
+    {event.addedToDashboard ? <MdBookmarkRemove /> : <IoMdBookmark />}
   </button>
 </div>
 

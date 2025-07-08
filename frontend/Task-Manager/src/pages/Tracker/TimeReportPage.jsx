@@ -19,15 +19,14 @@ const TimeReportPage = () => {
   const navigate = useNavigate();
   const selectedTask = searchParams.get("task");
 
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999);
-
-  const [range, setRange] = useState([
-    { startDate: todayStart, endDate: todayEnd, key: "selection" },
-  ]);
+ const now = new Date();
+ const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+ const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+ const [range, setRange] = useState([{
+   startDate: monthStart,
+   endDate: monthEnd,
+ key: "selection"
+}]);
 
 
   const fetchLogs = async () => {
@@ -50,6 +49,16 @@ const TimeReportPage = () => {
   const filteredLogs = selectedTask
     ? logs.filter(log => log.task?.title === selectedTask)
     : logs;
+  if (filteredLogs.length === 0) {
+  return (
+    <DashboardLayout activeMenu="Time Tracker">
+      <div className="p-6 w-full border my-5 rounded-xl shadow-md text-center text-gray-500">
+        <h1 className="text-xl font-medium mb-4">Time Tracker Report</h1>
+        <p>No data to show for this period.</p>
+      </div>
+    </DashboardLayout>
+  );
+}
 
   const formatDuration = (seconds) => {
     const hrs = Math.floor(seconds / 3600);

@@ -66,7 +66,7 @@ const Dashboard = () => {
   };
 
   const onSeeMore = ()=>{
-    navigate('/admin/tasks')
+    navigate('/user/tasks')
   }
 
   useEffect(() => {
