@@ -7,12 +7,71 @@ const excelJS = require("exceljs");
 // @access  Private (Admin)
 
 
+// const exportTasksReport = async (req, res) => {
+//   try {
+//     const tasks = await Task.find().populate("assignedTo", "name email");
+
+//     const workbook = new excelJS.Workbook();
+//     const worksheet = workbook.addWorksheet("Tasks Report");
+
+//     worksheet.columns = [
+//       { header: "Task ID", key: "_id", width: 25 },
+//       { header: "Title", key: "title", width: 30 },
+//       { header: "Description", key: "description", width: 50 },
+//       { header: "Priority", key: "priority", width: 15 },
+//       { header: "Status", key: "status", width: 20 },
+//       { header: "Due Date", key: "dueDate", width: 20 },
+//       { header: "Assigned To", key: "assignedTo", width: 30 },
+//     ];
+
+//     tasks.forEach((task) => {
+//       const assignedTo = task.assignedTo
+//         .map((user) => `${user.name} (${user.email})`)
+//         .join(", ");
+//       worksheet.addRow({
+//         _id: task._id,
+//         title: task.title,
+//         description: task.description,
+//         priority: task.priority,
+//         status: task.status,
+//         dueDate: task.dueDate.toISOString().split("T")[0],
+//         assignedTo: assignedTo || "Unassigned",
+//       });
+//     });
+
+//     res.setHeader(
+//       "Content-Type",
+//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//     );
+//     res.setHeader(
+//       "Content-Disposition",
+//       'attachment; filename="tasks_report.xlsx"'
+//     );
+
+//     return workbook.xlsx.write(res).then(() => {
+//       res.end();
+//     });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Error exporting tasks", error: error.message });
+//   }
+// };
+
+const mongoose = require("mongoose"); // Make sure to import this
+
 const exportTasksReport = async (req, res) => {
   try {
-    const tasks = await Task.find().populate("assignedTo", "name email");
+    const userId = req.user._id;
+
+    // Find tasks assigned to this user only
+    const tasks = await Task.find({ assignedTo: userId }).populate(
+      "assignedTo",
+      "name email"
+    );
 
     const workbook = new excelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Tasks Report");
+    const worksheet = workbook.addWorksheet("Assigned Tasks Report");
 
     worksheet.columns = [
       { header: "Task ID", key: "_id", width: 25 },
@@ -29,7 +88,7 @@ const exportTasksReport = async (req, res) => {
         .map((user) => `${user.name} (${user.email})`)
         .join(", ");
       worksheet.addRow({
-        _id: task._id,
+        _id: task._id.toString(),
         title: task.title,
         description: task.description,
         priority: task.priority,
@@ -45,18 +104,16 @@ const exportTasksReport = async (req, res) => {
     );
     res.setHeader(
       "Content-Disposition",
-      'attachment; filename="tasks_report.xlsx"'
+      'attachment; filename="assigned_tasks_report.xlsx"'
     );
 
-    return workbook.xlsx.write(res).then(() => {
-      res.end();
-    });
+    await workbook.xlsx.write(res);
+    res.end();
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error exporting tasks", error: error.message });
+    res.status(500).json({ message: "Error exporting tasks", error: error.message });
   }
 };
+
 
 // @desc    Export user-task report as an Excel file
 // @route   GET /api/reports/export/users

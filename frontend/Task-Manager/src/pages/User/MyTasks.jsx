@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
@@ -12,6 +12,7 @@ import DeleteAlert from "../../components/DeleteAlert";
 import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
 import TaskPriorityTabs from "./TaskPriorityTabs";
+
 
 const MyTasks = () => {
 
@@ -121,26 +122,48 @@ const MyTasks = () => {
     );
   };
 
-  const handleDownloadReport = async () => {
-    try {
-      const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS, {
-          responseType: "blob",
-        });
+  // const handleDownloadReport = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS, {
+  //         responseType: "blob",
+  //       });
   
-        // Create a URL for the blob
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "task_details.xlsx");
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error("Error downloading details:", error);
-        toast.error("Failed to download details. Please try again.");
-      }
-    };
+  //       // Create a URL for the blob
+  //       const url = window.URL.createObjectURL(new Blob([response.data]));
+  //       const link = document.createElement("a");
+  //       link.href = url;
+  //       link.setAttribute("download", "task_details.xlsx");
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       link.parentNode.removeChild(link);
+  //       window.URL.revokeObjectURL(url);
+  //     } catch (error) {
+  //       console.error("Error downloading details:", error);
+  //       toast.error("Failed to download details. Please try again.");
+  //     }
+  //   };
+
+ const handleDownloadReport = async () => {
+  try {
+    const response = await axiosInstance.get("/api/reports/export/tasks", {
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "assigned_tasks_report.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error downloading report:", error);
+    toast.error("Failed to download report. Please try again.");
+  }
+};
+
+
     
   const handleClick = (taskId) => {
     navigate(`/user/task-details/${taskId}`);
