@@ -126,10 +126,9 @@ const TimeReportPage = () => {
   });
 
   return (
-    <DashboardLayout activeMenu="Time Tracker">
       <div className="p-6 w-full">
         <div className="flex flex-col justify-center space-y-3">
-        <h1 className="text-xl font-medium">Time Tracker Report</h1>
+        <h1 className="text-xl md:text-2xl text-primary font-bold mb-3">Time Tracker Report</h1>
         <div className="flex flex-col items-start justify-center">
             <label className="flex items-center my-2 text-[0.9rem] text-center font-semibold">Group By:</label>
             <select value={groupBy} onChange={(e) => setGroupBy(e.target.value)} className="p-2 border rounded text-sm cursor-pointer">
@@ -195,108 +194,7 @@ const TimeReportPage = () => {
             <Bar dataKey="hours" fill="#8884d8" />
           </BarChart>
         </div>
-
-        {/* Summary Table */}
-        <div className="mt-6">
-          <h2 className="text-md font-semibold mb-2">Summary Table</h2>
-          <table className="w-full text-sm border">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 text-center text-[0.9rem]">Task</th>
-                <th className="p-2 text-center text-[0.9rem]">Time Tracked</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pieData.map((item, index) => (
-                <tr key={index}>
-                  <td className="p-2 border border-dotted">
-                    <button onClick={() => navigate(`?task=${encodeURIComponent(item.name)}`)} className="cursor-pointer text-blue-600 underline">
-                      {item.name}
-                    </button>
-                  </td>
-                  <td className="p-2 border border-dotted">{formatDuration(item.value)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Daily Breakdown Table */}
-        <div className="mt-6">
-          <h2 className="text-md font-semibold mb-2">Daily Breakdown</h2>
-          <table className="w-full text-sm border">
-            <thead className="bg-gray-100">
-              <tr className="border-b border-dotted">
-                <th className="p-2 text-center">Date</th>
-                <th className="p-2 text-center">Task</th>
-                <th className="p-2 text-center">Total Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(logsByDayAndTask).map(([date, tasks]) =>
-                Object.entries(tasks).map(([taskName, taskLogs], idx) => {
-                  const total = taskLogs.reduce((sum, log) => sum + log.duration, 0);
-                  const key = `${date}-${taskName}`;
-                  const isExpanded = expandedRows[key];
-
-                  return (
-                    <React.Fragment key={key}>
-                      <tr className="bg-white border border-dotted hover:bg-gray-50 cursor-pointer" onClick={() =>
-                        setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }))
-                      }>
-                        <td className="p-2 border border-dotted">{idx === 0 ? date : ""}</td>
-                        <td className="p-2 border border-dotted">
-                          <button className="text-blue-600 underline">
-                            {taskName} {isExpanded ? "▲" : "▼"}
-                          </button>
-                        </td>
-                        <td className="p-2">{formatDuration(total)}</td>
-                      </tr>
-                      {isExpanded && taskLogs.map((log, i) => (
-                        <tr key={`${key}-${i}`} className="bg-gray-50">
-                          <td className="p-2 pl-6">—</td>
-                          <td className="p-2">
-                            <div className="text-xs text-gray-700">
-                              {new Date(log.startTime).toLocaleTimeString()} → {new Date(log.endTime).toLocaleTimeString()}
-                            </div>
-                          </td>
-                          <td className="p-2 text-xs">{formatDuration(log.duration)}</td>
-                        </tr>
-                      ))}
-                    </React.Fragment>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Detailed Logs Table */}
-        <div className="mt-6">
-          <h2 className="text-md font-semibold mb-2">Detailed Time Logs</h2>
-          <table className="w-full text-sm border">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 text-center">Task</th>
-                <th className="p-2 text-center">Start</th>
-                <th className="p-2 text-center">End</th>
-                <th className="p-2 text-center">Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredLogs.map((log, i) => (
-                <tr key={i}>
-                  <td className="p-2 border border-dotted">{log.task?.title || "Unknown"}</td>
-                  <td className="p-2 border border-dotted text-center">{new Date(log.startTime).toLocaleString()}</td>
-                  <td className="p-2 border border-dotted text-center">{new Date(log.endTime).toLocaleString()}</td>
-                  <td className="p-2 border border-dotted text-center">{formatDuration(log.duration)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </div>
-    </DashboardLayout>
   );
 };
 

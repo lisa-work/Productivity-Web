@@ -15,6 +15,7 @@ import CustomPieChart from "../../components/Charts/CustomPieChart";
 import CustomBarChart from "../../components/Charts/CustomBarChart";
 import DashboardAddons from "../Tracker/DashboardAddons";
 import CalendarView from "../Tracker/CalendarView";
+import TimeTrackerOverview from "../Tracker/TimeTrackerOverview";
 
 const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
@@ -150,6 +151,15 @@ const UserDashboard = () => {
         <h4 className="text-xl md:text-2xl text-primary font-bold mb-3">Task Calendar</h4>
         <CalendarView allTasks={allTasks} />
       </div>
+
+      <div>
+        <TimeTrackerOverview
+          allTasks={allTasks}
+          onTaskClick={(task) => {
+            navigate(`/tracker/time-tracker?task=${encodeURIComponent(task.title)}`);
+          }}
+        />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
         
         <div>
@@ -180,7 +190,7 @@ const UserDashboard = () => {
         <div className="md:col-span-2">
           <div className="card">
             <div className="flex items-center justify-between ">
-              <h5 className="text-lg">Recent Tasks</h5>
+              <h5 className="text-xl md:text-2xl text-primary font-bold mb-3">Recent Tasks</h5>
 
               <button className="card-btn" onClick={onSeeMore}>
                 See All <LuArrowRight className="text-base" />
