@@ -11,13 +11,24 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a28eff", "#ff6e6e"
 
 const TimeReportPage = () => {
   const [logs, setLogs] = useState([]);
-  const [range, setRange] = useState([{ startDate: new Date(), endDate: new Date(), key: "selection" }]);
+  // const [range, setRange] = useState([{ startDate: new Date(), endDate: new Date(), key: "selection" }]);
   const [groupBy, setGroupBy] = useState("daily");
   const [expandedRows, setExpandedRows] = useState({});
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const selectedTask = searchParams.get("task");
+
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const [range, setRange] = useState([
+    { startDate: todayStart, endDate: todayEnd, key: "selection" },
+  ]);
+
 
   const fetchLogs = async () => {
     const start = range[0].startDate.toISOString();
@@ -69,6 +80,40 @@ const TimeReportPage = () => {
     color: COLORS[i % COLORS.length],
   }));
 
+  const SmallLegend = (props) => {
+  const { payload } = props;
+
+  return (
+    <ul className="text-xs space-y-1 mt-2 ml-4">
+      {payload.map((entry, index) => (
+        <li key={`item-${index}`} className="flex items-center space-x-2">
+          <span
+            className="w-3 h-3 inline-block rounded-sm"
+            style={{ backgroundColor: entry.color }}
+          />
+          <span>{entry.value}</span>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+// const SmallLegend = ({ payload }) => {
+//   return (
+//     <ul className="text-sm space-y-2">
+//       {payload.map((entry, index) => (
+//         <li key={`item-${index}`} className="flex items-center space-x-2">
+//           <span
+//             className="w-3 h-3 inline-block rounded-sm"
+//             style={{ backgroundColor: entry.color }}
+//           />
+//           <span>{entry.value}</span>
+//         </li>
+//       ))}
+//     </ul>
+//   );
+// };
+
   const logsByDayAndTask = {};
   filteredLogs.forEach((log) => {
     const dateKey = new Date(log.startTime).toLocaleDateString();
@@ -82,68 +127,73 @@ const TimeReportPage = () => {
 
   return (
     <DashboardLayout activeMenu="Time Tracker">
-      <div className="p-6">
+      <div className="p-6 w-full">
+        <div className="flex flex-col justify-center space-y-3">
         <h1 className="text-xl font-medium">Time Tracker Report</h1>
+        <div className="flex flex-col items-start justify-center">
+            <label className="flex items-center my-2 text-[0.9rem] text-center font-semibold">Group By:</label>
+            <select value={groupBy} onChange={(e) => setGroupBy(e.target.value)} className="p-2 border rounded text-sm cursor-pointer">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="all">All</option>
+            </select>
+        </div>
+        </div>
 
         {selectedTask && (
-          <button onClick={() => navigate(".")} className="mt-4 px-3 py-1 bg-red-500 text-white rounded">
+          <button onClick={() => navigate(".")} className="mt-4 px-3 py-1 bg-primary/20 text-white rounded">
             Clear Task Filter: {selectedTask}
           </button>
         )}
 
-        <div className="mt-4 flex flex-col md:flex-row gap-4">
+        <div className="mt-6 flex flex-col md:flex-row gap-4 items-center">
           <div>
             <DateRangePicker
               ranges={range}
               onChange={(item) => setRange([item.selection])}
             />
           </div>
-          <div>
-            <label className="block mb-1 text-sm">Group By</label>
-            <select value={groupBy} onChange={(e) => setGroupBy(e.target.value)} className="p-2 border rounded">
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="all">All</option>
-            </select>
-          </div>
+          
+        {/* Pie Chart */}
+        <div className="ml-10">
+          <h2 className="text-md font-semibold mb-2 text-center">Time Distribution by Task</h2>
+            <div className="">
+              <PieChart width={500} height={350} className="">
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  onClick={(data, index) => {
+                    const taskName = pieData[index].name;
+                    navigate(`?task=${encodeURIComponent(taskName)}`);
+                  }}
+                  cursor="pointer"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Legend content={<SmallLegend />} />
+                <Tooltip formatter={(value) => formatDuration(value)} />
+              </PieChart>
+            </div>
+        </div>
+
         </div>
 
         {/* Bar Chart */}
-        <div className="mt-6">
-          <h2 className="text-md font-semibold mb-2">Time Tracked (Hours)</h2>
-          <BarChart width={600} height={300} data={barData}>
+        <div className="mt-6 px-2">
+          <h2 className="text-md font-semibold mb-5">Time Tracked (Hours)</h2>
+          <BarChart width={1150} height={300} data={barData}>
             <XAxis dataKey="day" />
             <YAxis />
             <Tooltip formatter={(value) => formatDuration(value * 3600)} />
             <Bar dataKey="hours" fill="#8884d8" />
           </BarChart>
-        </div>
-
-        {/* Pie Chart */}
-        <div className="mt-8">
-          <h2 className="text-md font-semibold mb-2">Time Distribution by Task</h2>
-          <PieChart width={400} height={300}>
-            <Pie
-              data={pieData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              onClick={(data, index) => {
-                const taskName = pieData[index].name;
-                navigate(`?task=${encodeURIComponent(taskName)}`);
-              }}
-              cursor="pointer"
-            >
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Legend />
-            <Tooltip formatter={(value) => formatDuration(value)} />
-          </PieChart>
         </div>
 
         {/* Summary Table */}
@@ -152,19 +202,19 @@ const TimeReportPage = () => {
           <table className="w-full text-sm border">
             <thead className="bg-gray-100">
               <tr>
-                <th className="p-2 text-left">Task</th>
-                <th className="p-2 text-left">Time Tracked</th>
+                <th className="p-2 text-center text-[0.9rem]">Task</th>
+                <th className="p-2 text-center text-[0.9rem]">Time Tracked</th>
               </tr>
             </thead>
             <tbody>
               {pieData.map((item, index) => (
                 <tr key={index}>
-                  <td className="p-2">
-                    <button onClick={() => navigate(`?task=${encodeURIComponent(item.name)}`)} className="text-blue-600 underline">
+                  <td className="p-2 border border-dotted">
+                    <button onClick={() => navigate(`?task=${encodeURIComponent(item.name)}`)} className="cursor-pointer text-blue-600 underline my-1">
                       {item.name}
                     </button>
                   </td>
-                  <td className="p-2">{formatDuration(item.value)}</td>
+                  <td className="p-2 border border-dotted">{formatDuration(item.value)}</td>
                 </tr>
               ))}
             </tbody>
