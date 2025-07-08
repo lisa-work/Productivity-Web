@@ -121,7 +121,7 @@ const CountdownPage = () => {
           <h1 className="text-xl md:text-2xl font-medium">My Countdown Events</h1>
           <button
             onClick={() => setShowModal(true)}
-            className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark"
+            className="bg-primary/80 text-white px-4 py-2 rounded hover:bg-primary cursor-pointer"
           >
             + New Countdown
           </button>
@@ -137,41 +137,48 @@ const CountdownPage = () => {
                 <div
                   key={event._id}
                   className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
-                  style={{ backgroundImage: `url(${event.image || '/uploads/placeholder.jpg'})` }}
+                  style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
                 >
                   <div className="absolute inset-0 bg-black/40 rounded-xl z-0" />
                   <div className="relative z-10 flex flex-col justify-between h-full">
-                    <div>
-                      <h4 className="font-bold">{event.eventName}</h4>
-                      <p className="text-lg">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
+                    <div className="space-y-3">
+                      <h4 className="font-bold text-lg">{event.eventName}</h4>
+                      <p className="text-2xl">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
                       <p className="text-sm">{moment(event.eventDate).format("MMM D, YYYY")}</p>
                     </div>
                     <div className="flex gap-2 mt-2">
-                      <button
-                        onClick={() => {
-                          setSelectedEvent(event);
-                          setShowModal(true);
-                        }}
-                        title="Edit"
-                        className="bg-white text-black px-2 rounded"
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        onClick={() => deleteEvent(event._id)}
-                        title="Delete"
-                        className="bg-red-500 px-2 rounded"
-                      >
-                        🗑️
-                      </button>
-                      <button
-                        onClick={() => toggleDashboard(event._id)}
-                        title="Toggle Dashboard"
-                        className={`px-2 rounded ${event.addedToDashboard ? "bg-yellow-400" : "bg-gray-300"}`}
-                      >
-                        📌
-                      </button>
-                    </div>
+  <button
+    onClick={() => {
+      setSelectedEvent(event);
+      setShowModal(true);
+    }}
+    title="Edit"
+    className="bg-green-100 text-black px-3 py-1 rounded shadow hover:bg-green-200 text-sm cursor-pointer"
+  >
+    Edit
+  </button>
+
+  <button
+    onClick={() => deleteEvent(event._id)}
+    title="Delete"
+    className="bg-red-500 text-white px-3 py-1 rounded shadow hover:bg-red-600 text-sm cursor-pointer"
+  >
+    Delete
+  </button>
+
+  <button
+    onClick={() => toggleDashboard(event._id)}
+    title="Toggle Dashboard"
+    className={`px-3 py-1 rounded shadow ${
+      event.addedToDashboard
+        ? "bg-yellow-100 text-black hover:bg-yellow-500 text-sm cursor-pointer"
+        : "bg-blue-100 text-black hover:bg-gray-400 text-sm cursor-pointer"
+    }`}
+  >
+    {event.addedToDashboard ? "Remove" : "Add to Dashboard"}
+  </button>
+</div>
+
                   </div>
                 </div>
               );

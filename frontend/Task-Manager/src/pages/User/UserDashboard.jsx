@@ -154,7 +154,7 @@ useEffect(() => {
 
 {dashboardEvents.length > 0 && (
   <div className="card my-5">
-    <h4 className="text-xl md:text-2xl text-primary font-bold mb-3">Pinned Countdown Events</h4>
+    {/* <h4 className="text-xl md:text-2xl text-primary font-bold mb-3">Countdown Events</h4> */}
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
       {dashboardEvents.map((event) => {
         const daysLeft = moment(event.eventDate).diff(moment(), "days");
@@ -162,7 +162,7 @@ useEffect(() => {
           <div
             key={event._id}
             className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
-            style={{ backgroundImage: `url(${event.image || '/uploads/placeholder.jpg'})` }}
+            style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
           >
             <div className="absolute inset-0 bg-black/40 rounded-xl" />
             <div className="relative z-10 flex flex-col justify-between h-full">

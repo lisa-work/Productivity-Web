@@ -7,7 +7,7 @@ const CountdownEvent = require("../models/CountdownEvent");
 // Create event
 router.post("/", protect, upload.single("image"), async (req, res) => {
   const { eventName, eventDate } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : "/uploads/placeholder.jpg";
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
   const newEvent = new CountdownEvent({
     userId: req.user._id,
