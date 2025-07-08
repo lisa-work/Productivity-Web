@@ -127,7 +127,7 @@ const TimeReportPage = () => {
 
   return (
     <DashboardLayout activeMenu="Time Tracker">
-      <div className="p-6 w-full">
+      <div className="p-6 w-full border my-5 rounded-xl shadow-md">
         <div className="flex flex-col justify-center space-y-3">
         <h1 className="text-xl font-medium">Time Tracker Report</h1>
         <div className="flex flex-col items-start justify-center">

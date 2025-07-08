@@ -126,7 +126,7 @@ const TimeReportPage = () => {
   });
 
   return (
-      <div className="p-6 w-full">
+      <div className="p-6 w-full mt-5 rounded-xl shadow-lg hover:shadow-md transition-shadow duration-200">
         <div className="flex flex-col justify-center space-y-3">
         <h1 className="text-xl md:text-2xl text-primary font-bold mb-3">Time Tracker Report</h1>
         <div className="flex flex-col items-start justify-center">
