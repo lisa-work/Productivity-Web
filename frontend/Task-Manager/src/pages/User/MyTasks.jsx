@@ -10,11 +10,14 @@ import { IoMdAdd } from "react-icons/io";
 import Modal from "../../components/Modal";
 import DeleteAlert from "../../components/DeleteAlert";
 import toast from "react-hot-toast";
+import { useSearchParams } from "react-router-dom";
+import TaskPriorityTabs from "./TaskPriorityTabs";
 
 const MyTasks = () => {
 
   const [allTasks, setAllTasks] = useState([]);
   const [tasks, setTasks] = useState(allTasks || []);
+  const [priorityTab, setPriorityTab] = useState("All");
 
   const [tabs, setTabs] = useState([]);
   const [filterStatus, setFilterStatus] = useState("All");
@@ -22,35 +25,94 @@ const MyTasks = () => {
   const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
   const [taskIdToDelete, setTaskIdToDelete] = useState(null);
 
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const priorityParam = searchParams.get("priority");
+  const statusParam = searchParams.get("status");
 
-  const getAllTasks = async () => {
-    try {
-      const response = await axiosInstance.get(API_PATHS.TASKS.GET_ALL_TASKS, {
-        params: {
-          status: filterStatus === "All" ? "" : filterStatus,
-        },
-      });
-
-      setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : []);
-      setTasks(response.data.tasks);
-
-      // Map statusSummary data with fixed labels and order
-      const statusSummary = response.data?.statusSummary || {};
-
-      const statusArray = [
-        { label: "All", count: statusSummary.all || 0 },
-        { label: "Pending", count: statusSummary.pendingTasks || 0 },
-        { label: "In Progress", count: statusSummary.inProgressTasks || 0 },
-        { label: "Completed", count: statusSummary.completedTasks || 0 },
-      ];
-
-      setTabs(statusArray);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
+  const clearFilter = () => {
+    setSearchParams({});
   };
 
+  useEffect(() => {
+  if (statusParam) {
+    setFilterStatus(statusParam);
+  }
+  if (priorityParam) {
+    setPriorityTab(priorityParam);
+  }
+}, [statusParam, priorityParam]);
+
+  const navigate = useNavigate();
+
+  // const getAllTasks = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(API_PATHS.TASKS.GET_ALL_TASKS, {
+  //     params: {
+  //       status: statusParam || (filterStatus === "All" ? "" : filterStatus),
+  //       priority: priorityParam || (priorityTab === "All" ? "" : priorityTab),
+  //     },
+  //     });
+
+  //     setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : []);
+  //     setTasks(response.data.tasks);
+
+  //     // Map statusSummary data with fixed labels and order
+  //     const statusSummary = response.data?.statusSummary || {};
+
+  //     const statusArray = [
+  //       { label: "All", count: statusSummary.all || 0 },
+  //       { label: "Pending", count: statusSummary.pendingTasks || 0 },
+  //       { label: "In Progress", count: statusSummary.inProgressTasks || 0 },
+  //       { label: "Completed", count: statusSummary.completedTasks || 0 },
+  //     ];
+
+  //     setTabs(statusArray);
+  //   } catch (error) {
+  //     console.error("Error fetching users:", error);
+  //   }
+  // };
+
+  // const handleTimeUpdate = (taskId, newTimeTracked) => {
+  //   setTasks((prevTasks) =>
+  //     prevTasks.map((task) =>
+  //       task._id === taskId ? { ...task, timeTracked: newTimeTracked } : task
+  //     )
+  //   );
+  // };
+
+  const getAllTasks = async () => {
+  try {
+    const isStatusAll = filterStatus === "All";
+    const isPriorityAll = priorityTab === "All";
+
+    const params = {};
+
+    if (!isStatusAll) {
+      params.status = filterStatus;
+    }
+
+    if (!isPriorityAll) {
+      params.priority = priorityTab;
+    }
+
+    const response = await axiosInstance.get(API_PATHS.TASKS.GET_ALL_TASKS, { params });
+
+    setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : []);
+    setTasks(response.data.tasks);
+
+    const statusSummary = response.data?.statusSummary || {};
+    const statusArray = [
+      { label: "All", count: statusSummary.all || 0 },
+      { label: "Pending", count: statusSummary.pendingTasks || 0 },
+      { label: "In Progress", count: statusSummary.inProgressTasks || 0 },
+      { label: "Completed", count: statusSummary.completedTasks || 0 },
+    ];
+
+    setTabs(statusArray);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
   const handleTimeUpdate = (taskId, newTimeTracked) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
@@ -59,11 +121,9 @@ const MyTasks = () => {
     );
   };
 
-
-
-    const handleDownloadReport = async () => {
-      try {
-        const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS, {
+  const handleDownloadReport = async () => {
+    try {
+      const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS, {
           responseType: "blob",
         });
   
@@ -105,10 +165,42 @@ const MyTasks = () => {
     }
   };  
 
-  useEffect(() => {
-    getAllTasks(filterStatus);
-    return () => {};
-  }, [filterStatus]);
+useEffect(() => {
+  const priority = priorityParam || priorityTab;
+  const status = statusParam || filterStatus;
+
+  const fetchTasks = async () => {
+    try {
+      const params = {};
+      if (status !== "All") params.status = status;
+      if (priority !== "All") params.priority = priority;
+
+      const response = await axiosInstance.get(API_PATHS.TASKS.GET_ALL_TASKS, {
+        params,
+      });
+
+      setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : []);
+      setTasks(response.data.tasks);
+
+      const statusSummary = response.data?.statusSummary || {};
+      const statusArray = [
+        { label: "All", count: statusSummary.all || 0 },
+        { label: "Pending", count: statusSummary.pendingTasks || 0 },
+        { label: "In Progress", count: statusSummary.inProgressTasks || 0 },
+        { label: "Completed", count: statusSummary.completedTasks || 0 },
+      ];
+
+      setTabs(statusArray);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
+  setFilterStatus(status);
+  setPriorityTab(priority);
+  fetchTasks();
+}, [priorityParam, statusParam]);
+
 
   return (
     <DashboardLayout activeMenu="My Tasks">
@@ -135,12 +227,58 @@ const MyTasks = () => {
 
 
 <div className="my-3">
-              <TaskStatusTabs
-              tabs={tabs}
-              activeTab={filterStatus}
-              setActiveTab={setFilterStatus}
-            />
+<TaskStatusTabs
+  tabs={tabs}
+  activeTab={filterStatus}
+  setActiveTab={(status) => {
+    setFilterStatus(status);
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      if (status === "All") {
+        params.delete("status");
+      } else {
+        params.set("status", status);
+      }
+      return params;
+    });
+  }}
+/>
 </div>
+
+<TaskPriorityTabs
+  activeTab={priorityTab}
+  setActiveTab={(priority) => {
+    setPriorityTab(priority);
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      if (priority === "All") {
+        params.delete("priority");
+      } else {
+        params.set("priority", priority);
+      }
+      return params;
+    });
+  }}
+/>
+
+
+
+{/* {(statusParam || priorityParam) && (
+  <div className="my-2">
+    <button
+      onClick={clearFilter}
+      className="text-sm bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition"
+    >
+      Clear criteria:{" "}
+      <span className="font-semibold">
+        {statusParam ? `Status = ${statusParam}` : ""}
+        {statusParam && priorityParam ? ", " : ""}
+        {priorityParam ? `Priority = ${priorityParam}` : ""}
+      </span>
+    </button>
+  </div>
+)} */}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {tasks?.map((item, index) => (
             <TaskCard

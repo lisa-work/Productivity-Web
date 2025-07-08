@@ -212,24 +212,24 @@ useEffect(() => {
       {/* Filters */}
       <div className="flex gap-4 mb-4">
         <select
-          className="px-3 py-2 outline outline-offset-3 rounded-md text-sm"
+          className="px-3 py-2 outline outline-offset-3 rounded-md text-sm cursor-pointer"
           value={filter.status}
           onChange={(e) => setFilter({ ...filter, status: e.target.value })}
         >
-          <option value="All">All Statuses</option>
-          <option value="Pending">Pending</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
+          <option value="All" className="cursor-pointer">All Statuses</option>
+          <option value="Pending" className="cursor-pointer">Pending</option>
+          <option value="In Progress" className="cursor-pointer">In Progress</option>
+          <option value="Completed" className="cursor-pointer">Completed</option>
         </select>
         <select
-          className="px-3 py-2 outline outline-offset-3  rounded-md text-sm"
+          className="px-3 py-2 outline outline-offset-3  rounded-md text-sm cursor-pointer"
           value={filter.priority}
           onChange={(e) => setFilter({ ...filter, priority: e.target.value })}
         >
-          <option value="All">All Priorities</option>
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
+          <option value="All" className="cursor-pointer">All Priorities</option>
+          <option value="Low" className="cursor-pointer">Low</option>
+          <option value="Medium" className="cursor-pointer">Medium</option>
+          <option value="High" className="cursor-pointer">High</option>
         </select>
       </div>
 

@@ -7,19 +7,22 @@ const mongoose = require("mongoose");
 // @access  Private
 const getTasks = async (req, res) => {
   try {
-    const { status } = req.query;
+    const { status, priority } = req.query;
+
     let filter = {};
 
     if (status) {
       filter.status = status;
     }
 
-    let tasks;
+    if (priority) {
+      filter.priority = priority;
+    }
 
-      tasks = await Task.find({
-        ...filter,
-        assignedTo: { $in: [req.user._id] }, // ✅ more reliable match
-      }).populate("assignedTo", "name email profileImageUrl");
+    let tasks = await Task.find({
+      ...filter,
+      assignedTo: { $in: [req.user._id] },
+    }).populate("assignedTo", "name email profileImageUrl");
 
     // if (req.user.role === "admin") {
     //   tasks = await Task.find(filter).populate(
