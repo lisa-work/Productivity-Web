@@ -12,6 +12,7 @@ import TimeReportPage from "./pages/Tracker/TimeReportPage";
 import LogIn from "./pages/Auth/LogIn";
 import SignUp from "./pages/Auth/SignUp";
 import CreateTask from "./pages/Admin/CreateTask";
+import CountdownPage from "./pages/Tracker/CountdownPage";
 // import ManageTasks from "./pages/Admin/ManageTasks";
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
               <Route path="/user/tasks" element={<MyTasks />} />
               <Route path="/user/create-task" element={<CreateUserTask />} />
               <Route path="/user/time-tracker" element={<TimeReportPage />} />
+              <Route path="/user/countdown" element={<CountdownPage />} />
               <Route
                 path="/user/task-details/:id"
                 element={<ViewTaskDetails />}

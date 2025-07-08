@@ -26,13 +26,22 @@ const UserDashboard = () => {
   const { user } = useContext(UserContext);
 
   const navigate = useNavigate();
-
+  const [dashboardEvents, setDashboardEvents] = useState([]);
   const [dashboardData, setDashboardData] = useState(null);
   const [pieChartData, setPieChartData] = useState([]);
   const [barChartData, setBarChartData] = useState([]);
 
   const [allTasks, setAllTasks] = useState([]);
 
+const getDashboardEvents = async () => {
+  try {
+    const res = await axiosInstance.get("/api/countdowns");
+    // Only show pinned events
+    setDashboardEvents(res.data.filter(e => e.addedToDashboard));
+  } catch (err) {
+    console.error("Error fetching countdown events:", err);
+  }
+};
 
   // Prepare Chart Data
   const prepareChartData = (data) => {
@@ -84,16 +93,16 @@ const UserDashboard = () => {
     navigate('/admin/tasks')
   }
 
-  useEffect(() => {
-    getDashboardData();
-    getAllTasks();
+useEffect(() => {
+  getDashboardData();
+  getAllTasks();
+  getDashboardEvents();
 
-    window.refreshTasks = getAllTasks;
-
-    return () => {
-      delete window.refreshTasks;
-    };
-  }, []);
+  window.refreshTasks = getAllTasks;
+  return () => {
+    delete window.refreshTasks;
+  };
+}, []);
 
 
   return (
@@ -142,6 +151,33 @@ const UserDashboard = () => {
           />
         </div>
       </div>
+
+{dashboardEvents.length > 0 && (
+  <div className="card my-5">
+    <h4 className="text-xl md:text-2xl text-primary font-bold mb-3">Pinned Countdown Events</h4>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+      {dashboardEvents.map((event) => {
+        const daysLeft = moment(event.eventDate).diff(moment(), "days");
+        return (
+          <div
+            key={event._id}
+            className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
+            style={{ backgroundImage: `url(${event.image || '/uploads/placeholder.jpg'})` }}
+          >
+            <div className="absolute inset-0 bg-black/40 rounded-xl" />
+            <div className="relative z-10 flex flex-col justify-between h-full">
+              <div>
+                <h4 className="font-bold">{event.eventName}</h4>
+                <p className="text-lg">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
+                <p className="text-sm">{moment(event.eventDate).format("MMM D, YYYY")}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
 
       <div>
         <DashboardAddons/>
