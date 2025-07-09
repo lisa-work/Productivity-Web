@@ -90,7 +90,7 @@ const getDashboardEvents = async () => {
   };
 
   const onSeeMore = ()=>{
-    navigate('/admin/tasks')
+    navigate('/user/tasks')
   }
 
 useEffect(() => {
