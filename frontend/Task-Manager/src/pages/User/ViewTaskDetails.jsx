@@ -73,6 +73,15 @@ const ViewTaskDetails = () => {
     window.open(link, "_blank");
   };
 
+    const formatTime = (seconds) => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        const pad = (n) => n.toString().padStart(2, "0");
+        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    };  
+
   useEffect(() => {
     if (id) {
       getTaskDetailsByID();
@@ -83,7 +92,7 @@ const ViewTaskDetails = () => {
     <DashboardLayout activeMenu="My Tasks">
       <div className="mt-5">
         {task && (
-          <div className="grid grid-cols-1 md:grid-cols-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 mt-4 w-full">
             <div className="form-card col-span-3">
               <div className="flex items-center justify-between">
                 <h2 className="text-sm md:text-xl font-medium">
@@ -145,6 +154,10 @@ const ViewTaskDetails = () => {
                     onChange={() => updateTodoChecklist(index)}
                   />
                 ))}
+              </div>
+
+              <div className="mt-4">
+                <InfoBox label="Time Tracked" value={formatTime(task?.timeTracked)} />
               </div>
 
               {task?.attachments?.length > 0 && (
