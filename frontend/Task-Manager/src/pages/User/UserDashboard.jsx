@@ -211,7 +211,8 @@ useEffect(() => {
     )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
-        
+
+        {allTasks.length > 0 && (
         <div>
           <div className="card">
             <div className="flex items-center justify-between">
@@ -224,7 +225,9 @@ useEffect(() => {
             />
           </div>
         </div>
+        )}
 
+        {allTasks.length > 0 && (
         <div>
           <div className="card">
             <div className="flex items-center justify-between">
@@ -236,6 +239,7 @@ useEffect(() => {
             />
           </div>
         </div>
+        )}
 
         <div className="md:col-span-2">
           <div className="card">
