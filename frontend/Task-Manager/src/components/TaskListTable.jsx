@@ -1,7 +1,10 @@
 import React from 'react'
 import moment from 'moment'
+import { useNavigate } from "react-router-dom";
 
 const TaskListTable = ({tableData}) => {
+  const navigate = useNavigate();
+
     const getStatusBadgeColor = (status) => {
     switch (status) {
       case 'Completed': return 'bg-green-100 text-green-500 border border-green-200';
@@ -52,8 +55,8 @@ const formatDuration = (seconds) => {
         </thead>
         <tbody>
           {tableData.map((task) => (
-            <tr key={task._id} className="border-t border-gray-200">
-              <td className="my-3 mx-4 text-gray-700 text-[13px] line-clamp-1 overflow-hidden">{task.title}</td>
+            <tr key={task._id} className="border-t border-gray-200" onClick={() => navigate(`/user/task-details/${task._id}`)} style={{ cursor: 'pointer' }}>
+              <td className="my-3 mx-4 text-gray-700 text-[15px] line-clamp-1 overflow-hidden underline underline-offset-2 hover:text-primary">{task.title}</td>
               <td className="py-4 px-4">
                 <span className={`px-2 py-1 text-xs rounded inline-block ${getStatusBadgeColor(task.status)}`}>{task.status}</span>
               </td>
@@ -61,9 +64,9 @@ const formatDuration = (seconds) => {
                 <span className={`px-2 py-1 text-xs rounded inline-block ${getPriorityBadgeColor(task.priority)}`}>{task.priority}</span>
               </td>
               <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">{task.dueDate ? moment(task.dueDate).format('Do MMM YYYY') : 'N/A'}</td>
-              {/* <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">{task.timeTracked ? formatTime(task.timeTracked) : "00:00:00"}</td> */}
-              {/* <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">{moment.duration(task.timeTracked, "seconds").humanize()}</td> */}
-              
+              <td className="py-4 px-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell">
+              {task.timeTracked != null ? formatTime(task.timeTracked) : "00:00:00"}
+              </td>
             </tr>
           ))}
         </tbody>
