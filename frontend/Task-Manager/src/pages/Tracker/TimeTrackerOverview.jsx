@@ -71,7 +71,7 @@ const TimeReportPage = () => {
 
   const barData = Object.entries(groupedByDate).map(([day, duration]) => ({
     day,
-    hours: +(duration / 3600).toFixed(2),
+    hours: +(duration / 3600),
   }));
 
   const pieData = Object.entries(groupedByTask).map(([task, duration], i) => ({
