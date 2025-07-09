@@ -73,6 +73,15 @@ const exportTasksReport = async (req, res) => {
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet("Assigned Tasks Report");
 
+      const formatTime = (seconds) => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        const pad = (n) => n.toString().padStart(2, "0");
+        return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    };  
+
     worksheet.columns = [
       { header: "Task ID", key: "_id", width: 25 },
       { header: "Title", key: "title", width: 30 },
@@ -81,6 +90,7 @@ const exportTasksReport = async (req, res) => {
       { header: "Status", key: "status", width: 20 },
       { header: "Due Date", key: "dueDate", width: 20 },
       { header: "Assigned To", key: "assignedTo", width: 30 },
+      { header: "Time Tracked", key: "timeTracked", width: 30 },
     ];
 
     tasks.forEach((task) => {
@@ -95,6 +105,7 @@ const exportTasksReport = async (req, res) => {
         status: task.status,
         dueDate: task.dueDate.toISOString().split("T")[0],
         assignedTo: assignedTo || "Unassigned",
+        timeTracked: formatTime(task.timeTracked) || "00:00:00",
       });
     });
 
