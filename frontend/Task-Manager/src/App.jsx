@@ -9,7 +9,7 @@ import UserProvider, { UserContext } from "./context/userContext";
 import { Toaster } from "react-hot-toast";
 import CreateUserTask from "./pages/User/CreateUserTask";
 import TimeReportPage from "./pages/Tracker/TimeReportPage";
-import LogIn from "./pages/Auth/LogIn";
+import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
 import CreateTask from "./pages/Admin/CreateTask";
 import CountdownPage from "./pages/Tracker/CountdownPage";
@@ -21,7 +21,7 @@ const App = () => {
       <div>
         <Router>
           <Routes>
-            <Route path="/login" element={<LogIn />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
 
             {/* Admin Routes */}
