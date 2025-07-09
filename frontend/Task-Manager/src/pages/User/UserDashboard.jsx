@@ -32,6 +32,7 @@ const UserDashboard = () => {
   const [barChartData, setBarChartData] = useState([]);
 
   const [allTasks, setAllTasks] = useState([]);
+  const hasTimeTracked = allTasks.some(task => task.timeTracked && task.timeTracked > 0);
 
 const getDashboardEvents = async () => {
   try {
@@ -103,6 +104,7 @@ useEffect(() => {
     delete window.refreshTasks;
   };
 }, []);
+
 
 
   return (
@@ -197,6 +199,7 @@ useEffect(() => {
         <CalendarView allTasks={allTasks} />
       </div>
 
+    {hasTimeTracked && (
       <div>
         <TimeTrackerOverview
           allTasks={allTasks}
@@ -205,6 +208,8 @@ useEffect(() => {
           }}
         />
       </div>
+    )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
         
         <div>

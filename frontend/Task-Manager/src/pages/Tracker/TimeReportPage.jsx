@@ -193,18 +193,6 @@ const TimeReportPage = () => {
         </div>
 
         </div>
-
-        {/* Bar Chart */}
-        <div className="mt-6 px-2">
-          <h2 className="text-md font-semibold mb-5">Time Tracked (Hours)</h2>
-          <BarChart width={1150} height={300} data={barData}>
-            <XAxis dataKey="day" />
-            <YAxis />
-            <Tooltip formatter={(value) => formatDuration(value * 3600)} />
-            <Bar dataKey="hours" fill="#8884d8" />
-          </BarChart>
-        </div>
-
         {/* Summary Table */}
         <div className="mt-6">
           <h2 className="text-md font-semibold mb-2">Summary Table</h2>
@@ -228,6 +216,17 @@ const TimeReportPage = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        
+        {/* Bar Chart */}
+        <div className="mt-6 px-2">
+          <h2 className="text-md font-semibold mb-5">Time Tracked (Hours)</h2>
+          <BarChart width={1150} height={300} data={barData}>
+            <XAxis dataKey="day" />
+            <YAxis />
+            <Tooltip formatter={(value) => formatDuration(value * 3600)} />
+            <Bar dataKey="hours" fill="#8884d8" />
+          </BarChart>
         </div>
 
         {/* Daily Breakdown Table */}
