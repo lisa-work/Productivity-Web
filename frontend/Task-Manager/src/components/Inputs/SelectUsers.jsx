@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { API_PATHS } from "../../utils/apiPaths";
 import axiosInstance from "../../utils/axiosInstance";
 import { LuUsers } from "react-icons/lu";
 import Modal from "../Modal";
 import AvatarGroup from "../AvatarGroup";
+import { UserContext } from "../../context/UserContext";
 
 const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempSelectedUsers, setTempSelectedUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const { user } = useContext(UserContext);
+  const currentUserId = user?._id;
 
   const getAllUsers = async () => {
     try {
