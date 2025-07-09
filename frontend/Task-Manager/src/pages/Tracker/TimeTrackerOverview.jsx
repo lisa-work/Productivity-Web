@@ -19,15 +19,14 @@ const TimeReportPage = () => {
   const navigate = useNavigate();
   const selectedTask = searchParams.get("task");
 
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999);
-
-  const [range, setRange] = useState([
-    { startDate: todayStart, endDate: todayEnd, key: "selection" },
-  ]);
+ const now = new Date();
+ const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+ const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+ const [range, setRange] = useState([{
+   startDate: monthStart,
+   endDate: monthEnd,
+   key: "selection"
+}]);
 
 
   const fetchLogs = async () => {
