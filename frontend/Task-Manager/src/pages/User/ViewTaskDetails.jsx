@@ -112,7 +112,7 @@ const ViewTaskDetails = () => {
                     label="Due Date"
                     value={
                       task?.dueDate
-                        ? moment(task?.dueDate).format("Do MMM YYYY")
+                        ? moment.utc(task?.dueDate).format("Do MMM YYYY")
                         : "N/A"
                     }
                   />
