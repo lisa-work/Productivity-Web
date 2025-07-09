@@ -88,7 +88,7 @@ const DashboardAddons = () => {
     <div className="grid md:grid-cols-3 gap-6 mt-6">
 
       {/* Goals */}
-      <div className="card">
+      <div className="card overflow-auto h-[50vh]">
         <h4 className="text-lg font-semibold mb-2 text-primary">Goals</h4>
         <div className="flex mb-2">
           <input
@@ -128,7 +128,7 @@ const DashboardAddons = () => {
       </div>
 
       {/* Upcoming Due Tasks */}
-      <div className="card">
+      <div className="card overflow-auto h-[50vh]">
         <h4 className="text-lg font-semibold mb-2 text-primary">Upcoming Due Tasks</h4>
         <div className="flex mb-3">
         <ul className="list-disc pl-5 text-sm overflow-auto cursor-pointer">
@@ -149,7 +149,7 @@ const DashboardAddons = () => {
       </div>
 
       {/* Quick Notes */}
-      <div className="card">
+      <div className="card overflow-auto h-[50vh]">
         <h4 className="text-lg font-semibold mb-2 text-primary">Quick Notes</h4>
         <textarea
           rows="10"
