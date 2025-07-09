@@ -1,8 +1,11 @@
 # 🚀 Task Manager & Time Tracker
 
 A **full-stack** application for creating and assigning tasks, tracking time logs, generating reports, and managing countdown events—all in one place.
+
 Live demo: https://productivity-management-frontend.onrender.com
+
 Photos: https://drive.google.com/drive/folders/1SD_MQJfCSZZzGtCtuWWfpTM5xuw9a6x5
+
 Video demo: https://youtu.be/mqxu3PjZ91g
 
 ---
