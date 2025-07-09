@@ -1,6 +1,7 @@
 # 🚀 Task Manager & Time Tracker
 
 A **full-stack** application for creating and assigning tasks, tracking time logs, generating reports, and managing countdown events—all in one place.
+
 *Main branch has been modified for deployment via Render, Testing branch is used for Local host testing.*
 
 Live demo: https://productivity-management-frontend.onrender.com
