@@ -287,7 +287,7 @@ useEffect(() => {
             {filteredTasksForDate.map((task) => (
               <li
                 key={task._id}
-                className="mb-1 cursor-pointer hover:text-primary hover:underline"
+                className="mb-1 cursor-pointer hover:text-primary underline underline-offset-2 hover:underline"
                 onClick={() => handleClick(task._id)}
               >
                 <strong>{task.title}</strong> — Due{" "}
