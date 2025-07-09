@@ -56,7 +56,7 @@ const formatDuration = (seconds) => {
         <tbody>
           {tableData.map((task) => (
             <tr key={task._id} className="text-center border-t border-gray-200" onClick={() => navigate(`/user/task-details/${task._id}`)} style={{ cursor: 'pointer' }}>
-              <td className="text-center my-3 mx-4 text-gray-700 text-[15px] line-clamp-1 overflow-hidden underline underline-offset-2 hover:text-primary">{task.title}</td>
+              <td className="text-center my-3 mx-4 text-gray-700 text-[14px] line-clamp-1 overflow-hidden underline underline-offset-2 hover:text-primary">{task.title}</td>
               <td className="text-center py-4 px-4">
                 <span className={`px-2 py-1 text-xs rounded inline-block ${getStatusBadgeColor(task.status)}`}>{task.status}</span>
               </td>

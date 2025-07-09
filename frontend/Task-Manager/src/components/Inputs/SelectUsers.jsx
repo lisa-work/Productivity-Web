@@ -9,6 +9,7 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempSelectedUsers, setTempSelectedUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const getAllUsers = async () => {
     try {
@@ -86,10 +87,24 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
         title="Select Users"
       >
       <div className="space-y-4 h-[60vh] overflow-y-auto">
+
+        <input
+  type="text"
+  placeholder="Search by name or email..."
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  className="w-full p-2 mb-3 border border-gray-300 rounded-lg"
+/>
+
   {allUsers.length === 0 ? (
     <p className="text-gray-500">No users available to assign.</p>
   ) : (
-    allUsers.map((user) => (
+    allUsers
+  .filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+  .map((user) => (
       <div
         key={user._id}
         className="flex items-center gap-4 p-3 border-b border-gray-200"
