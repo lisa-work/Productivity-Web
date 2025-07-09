@@ -167,7 +167,7 @@ const TimeReportPage = () => {
                   outerRadius={100}
                   onClick={(data, index) => {
                     const taskName = pieData[index].name;
-                    navigate(`?task=${encodeURIComponent(taskName)}`);
+                    navigate(`/user/time-tracker?task=${encodeURIComponent(taskName)}`);
                   }}
                   cursor="pointer"
                 >
