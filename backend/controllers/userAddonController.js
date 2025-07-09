@@ -38,18 +38,4 @@ exports.updateUserAddons = async (req, res) => {
   }
 };
 
-exports.updateUserAddons = async (req, res) => {
-  const userId = req.user.id;
-  const { goals, quickNotes } = req.body;
 
-  try {
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { goals, quickNotes },
-      { new: true, runValidators: true }
-    );
-    res.json(updatedUser);
-  } catch (err) {
-    res.status(500).json({ message: "Update failed" });
-  }
-};

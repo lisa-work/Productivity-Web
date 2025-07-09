@@ -46,18 +46,18 @@ const formatDuration = (seconds) => {
       <table className="min-w-full">
         <thead>
           <tr className="text-left">
-            <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Name</th>
-            <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Status</th>
-            <th className="py-3 px-4 text-gray-800 font-medium text-[13px]">Priority</th>
-            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] hidden md:table-cell">Due Date</th>
-            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] hidden md:table-cell">Time Tracked</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] text-center">Name</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] text-center">Status</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] text-center">Priority</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] hidden md:table-cell text-center">Due Date</th>
+            <th className="py-3 px-4 text-gray-800 font-medium text-[13px] hidden md:table-cell text-center">Time Tracked</th>
           </tr>
         </thead>
         <tbody>
           {tableData.map((task) => (
-            <tr key={task._id} className="border-t border-gray-200" onClick={() => navigate(`/user/task-details/${task._id}`)} style={{ cursor: 'pointer' }}>
-              <td className="my-3 mx-4 text-gray-700 text-[15px] line-clamp-1 overflow-hidden underline underline-offset-2 hover:text-primary">{task.title}</td>
-              <td className="py-4 px-4">
+            <tr key={task._id} className="text-center border-t border-gray-200" onClick={() => navigate(`/user/task-details/${task._id}`)} style={{ cursor: 'pointer' }}>
+              <td className="text-center my-3 mx-4 text-gray-700 text-[15px] line-clamp-1 overflow-hidden underline underline-offset-2 hover:text-primary">{task.title}</td>
+              <td className="text-center py-4 px-4">
                 <span className={`px-2 py-1 text-xs rounded inline-block ${getStatusBadgeColor(task.status)}`}>{task.status}</span>
               </td>
               <td className="py-4 px-4">

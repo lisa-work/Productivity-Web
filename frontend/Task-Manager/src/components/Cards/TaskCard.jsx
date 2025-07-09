@@ -64,6 +64,7 @@ const [displaySeconds, setDisplaySeconds] = useState(timeTracked || 0);
 const [sessionSeconds, setSessionSeconds] = useState(0);
 const intervalRef = useRef(null);
 const startTimeRef = useRef(null);
+const [loading, setLoading] = useState(false);
 
 useEffect(() => {
   setDisplaySeconds(timeTracked || 0);
