@@ -1,6 +1,6 @@
 const Task = require("../models/Task");
 const mongoose = require("mongoose");
-
+const TimeLog = require("../models/TimeLog");
 
 // @desc    Get all tasks (Admin: all, User: only assigned tasks)
 // @route   GET /api/tasks/
@@ -215,18 +215,35 @@ const updateTask = async (req, res) => {
 // @desc    Delete a task (Admin only)
 // @route   DELETE /api/tasks/:id
 // @access  Private (Admin)
+// const deleteTask = async (req, res) => {
+//   try {
+//     const task = await Task.findById(req.params.id);
+
+//     if (!task) return res.status(404).json({ message: "Task not found" });
+
+//     await task.deleteOne();
+//     res.json({ message: "Task deleted successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error", error: error.message });
+//   }
+// };
+
 const deleteTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
 
     if (!task) return res.status(404).json({ message: "Task not found" });
 
+    // ✅ Delete related time logs
+    await TimeLog.deleteMany({ taskId: task._id });
+
     await task.deleteOne();
-    res.json({ message: "Task deleted successfully" });
+    res.json({ message: "Task and related time logs deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 // @desc    Update task status
 // @route   PUT /api/tasks/:id/status
@@ -447,29 +464,26 @@ const getUserDashboardData = async (req, res) => {
   }
 };
 
-// controllers/taskController.js
 // const updateTrackedTime = async (req, res) => {
 //   try {
 //     const { id } = req.params;
-//     const { timeTracked: timeIncrement } = req.body;
+//     const { timeTracked } = req.body;
 
-//     if (typeof timeIncrement !== "number" || timeIncrement < 0) {
+//     if (typeof timeTracked !== "number" || timeTracked < 0) {
 //       return res.status(400).json({ message: "Invalid timeTracked value" });
 //     }
 
 //     const task = await Task.findById(id);
-
 //     if (!task) {
 //       return res.status(404).json({ message: "Task not found" });
 //     }
 
-//     // Add the increment to the existing timeTracked value
-//     task.timeTracked = task.timeTracked || 0
-//     // task.timeTracked = (task.timeTracked || 0) + timeIncrement;
+//     // ✅ Set the tracked time instead of incrementing
+//     task.timeTracked = timeTracked;
 
 //     await task.save();
 
-//     res.json({ message: "Time tracked incremented", task });
+//     res.json({ message: "Time tracked updated", task });
 //   } catch (error) {
 //     res.status(500).json({ message: error.message });
 //   }
@@ -478,10 +492,10 @@ const getUserDashboardData = async (req, res) => {
 const updateTrackedTime = async (req, res) => {
   try {
     const { id } = req.params;
-    const { timeTracked } = req.body;
+    const { trackedSeconds } = req.body;
 
-    if (typeof timeTracked !== "number" || timeTracked < 0) {
-      return res.status(400).json({ message: "Invalid timeTracked value" });
+    if (typeof trackedSeconds !== "number" || trackedSeconds < 0) {
+      return res.status(400).json({ message: "Invalid trackedSeconds value" });
     }
 
     const task = await Task.findById(id);
@@ -489,8 +503,8 @@ const updateTrackedTime = async (req, res) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    // ✅ Set the tracked time instead of incrementing
-    task.timeTracked = timeTracked;
+    // ✅ Increment tracked time
+    task.timeTracked += trackedSeconds;
 
     await task.save();
 
@@ -499,6 +513,7 @@ const updateTrackedTime = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 module.exports = {

@@ -109,15 +109,25 @@ const handleToggleTimer = async (e) => {
         duration,
       });
 
+      // const res = await axiosInstance.put(`/api/tasks/${taskId}/track-time`, {
+      //   timeTracked: newTrackedTime,
+      // });
+
       const res = await axiosInstance.put(`/api/tasks/${taskId}/track-time`, {
-        timeTracked: newTrackedTime,
+        trackedSeconds: duration,
       });
 
-      const updatedTime = res.data.task.timeTracked;
+      // const updatedTime = res.data.task.timeTracked;
+      // setDisplaySeconds(updatedTime);
+      // setSessionSeconds(0);
+      // onTimeUpdate?.(taskId, updatedTime);
 
+      const updatedTime = res.data.task.timeTracked;
       setDisplaySeconds(updatedTime);
       setSessionSeconds(0);
       onTimeUpdate?.(taskId, updatedTime);
+
+
     } catch (error) {
       console.error("Time tracking failed:", error);
     } finally {
