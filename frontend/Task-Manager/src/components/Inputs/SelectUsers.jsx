@@ -60,26 +60,49 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
     );
   };
 
+  // const handleAssign = () => {
+  //   setSelectedUsers(tempSelectedUsers);
+  //   setIsModalOpen(false);
+  // };
+
   const handleAssign = () => {
-    setSelectedUsers(tempSelectedUsers);
-    setIsModalOpen(false);
-  };
+  let updated = tempSelectedUsers;
+
+  // Always include current user
+  if (!updated.includes(currentUserId)) {
+    updated = [...updated, currentUserId];
+  }
+
+  setSelectedUsers(updated);
+  setIsModalOpen(false);
+};
+
 
   const selectedUserAvatars = allUsers
     .filter((user) => selectedUsers.includes(user._id))
     .map((user) => user.profileImageUrl);
 
+    if (selectedUserAvatars.length === 0 && user?.profileImageUrl) {
+      selectedUserAvatars.push(user.profileImageUrl);
+    }
+
   useEffect(() => {
     getAllUsers();
   }, []);
 
-  useEffect(() => {
-    if (selectedUsers.length === 0) {
-      setTempSelectedUsers([]);
-    }
+  // useEffect(() => {
+  //   if (selectedUsers.length === 0) {
+  //     setTempSelectedUsers([]);
+  //   }
 
-    return () => {};
-  }, [selectedUsers]);
+  //   return () => {};
+  // }, [selectedUsers]);
+
+  useEffect(() => {
+  if (selectedUsers.length === 0 && currentUserId) {
+    setSelectedUsers([currentUserId]);
+  }
+}, [currentUserId, selectedUsers.length, setSelectedUsers]);
 
   // useEffect(() => {
   // const fetch = async () => {
