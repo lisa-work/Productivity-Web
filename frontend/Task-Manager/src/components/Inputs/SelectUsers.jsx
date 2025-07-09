@@ -14,6 +14,13 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
   const getAllUsers = async () => {
     try {
       const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS);
+
+      const filteredUsers = response.data.filter(
+        (user) => user._id !== currentUserId
+      );
+
+      setAllUsers(filteredUsers);
+
       if (Array.isArray(response.data) && response.data.length > 0) {
         setAllUsers(response.data);
       } else {
