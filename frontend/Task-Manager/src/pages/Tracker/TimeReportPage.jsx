@@ -14,6 +14,7 @@ const TimeReportPage = () => {
   // const [range, setRange] = useState([{ startDate: new Date(), endDate: new Date(), key: "selection" }]);
   const [groupBy, setGroupBy] = useState("daily");
   const [expandedRows, setExpandedRows] = useState({});
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -28,6 +29,13 @@ const TimeReportPage = () => {
  key: "selection"
 }]);
 
+useEffect(() => {
+  const handleResize = () => setScreenWidth(window.innerWidth);
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
+const chartWidth = Math.min(screenWidth - 40, 800);
 
   const fetchLogs = async () => {
     const start = range[0].startDate.toISOString();
@@ -201,7 +209,7 @@ if (groupBy === "daily") {
 
   return (
     <DashboardLayout activeMenu="Time Tracker">
-      <div className="p-6 w-full border my-5 rounded-xl shadow-md">
+      <div className="p-6 w-full border my-5 rounded-xl shadow-md w-${chartWidth}">
         <div className="flex flex-col justify-center space-y-3">
         <h1 className="text-xl font-medium">Time Tracker Report</h1>
         <div className="flex flex-col items-start justify-center">
@@ -221,7 +229,7 @@ if (groupBy === "daily") {
           </button>
         )}
 
-        <div className="mt-6 flex flex-col md:flex-row gap-4 items-center">
+        <div className="mt-6 flex flex-col xl:flex-row gap-4 items-center">
           <div>
             <DateRangePicker
               ranges={range}
@@ -286,7 +294,7 @@ if (groupBy === "daily") {
         {/* Bar Chart */}
         <div className="mt-6 px-2">
           <h2 className="text-md font-semibold mb-5">Time Tracked (Hours)</h2>
-          <BarChart width={1150} height={300} data={barData}>
+          <BarChart width={chartWidth} height={300} data={barData}>
             <XAxis dataKey="day" />
             <YAxis />
             <Tooltip formatter={(value) => formatDuration(value * 3600)} />

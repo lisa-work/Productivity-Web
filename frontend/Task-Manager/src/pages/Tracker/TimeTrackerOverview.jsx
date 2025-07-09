@@ -13,7 +13,7 @@ const TimeReportPage = () => {
   const [logs, setLogs] = useState([]);
   // const [range, setRange] = useState([{ startDate: new Date(), endDate: new Date(), key: "selection" }]);
   const [groupBy, setGroupBy] = useState("daily");
-  const [expandedRows, setExpandedRows] = useState({});
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -28,6 +28,14 @@ const TimeReportPage = () => {
    key: "selection"
 }]);
 
+
+useEffect(() => {
+  const handleResize = () => setScreenWidth(window.innerWidth);
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
+const chartWidth = Math.min(screenWidth - 40, 800);
 
   const fetchLogs = async () => {
     const start = range[0].startDate.toISOString();
@@ -189,8 +197,8 @@ if (groupBy === "daily") {
   });
 
   return (
-
-      <div className="p-6 w-full mt-5 rounded-xl shadow-lg hover:shadow-md transition-shadow duration-200">
+<div className="hidden xl:block">
+      <div className="hidden p-6 w-full mt-5 rounded-xl shadow-lg hover:shadow-md transition-shadow duration-200">
         <div className="flex flex-col justify-center space-y-3">
         <h1 className="text-xl md:text-2xl text-primary font-bold mb-3">Time Tracker Report</h1>
         <div className="flex flex-col items-start justify-center">
@@ -259,6 +267,81 @@ if (groupBy === "daily") {
           </BarChart>
         </div>
       </div>
+
+
+
+
+      <div className="p-6 w-full mt-5 rounded-xl shadow-lg hover:shadow-md transition-shadow duration-200">
+        <div className="flex flex-col justify-center space-y-3">
+          <h1 className="text-xl md:text-2xl text-primary font-bold mb-3">Time Tracker Report</h1>
+          <div className="flex flex-col items-start justify-center">
+              <label className="flex items-center my-2 text-[0.9rem] text-center font-semibold">Group By:</label>
+              <select value={groupBy} onChange={(e) => setGroupBy(e.target.value)} className="p-2 border rounded text-sm cursor-pointer">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="all">All</option>
+              </select>
+          </div>
+        </div>
+
+        {selectedTask && (
+          <button onClick={() => navigate(".")} className="mt-4 px-3 py-1 bg-primary/20 text-white rounded">
+            Clear Task Filter: {selectedTask}
+          </button>
+        )}
+
+        <div className="mt-6 flex flex-col md:flex-row gap-4 items-center">
+          <div>
+            <DateRangePicker
+              ranges={range}
+              onChange={(item) => setRange([item.selection])}
+            />
+          </div>
+          
+        {/* Pie Chart */}
+        <div className="ml-10">
+          <h2 className="text-md font-semibold mb-2 text-center">Time Distribution by Task</h2>
+            <div className="">
+              <PieChart width={500} height={350} className="">
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  onClick={(data, index) => {
+                    const taskName = pieData[index].name;
+                    navigate(`/user/time-tracker?task=${encodeURIComponent(taskName)}`);
+                  }}
+                  cursor="pointer"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Legend content={<SmallLegend />} />
+                <Tooltip formatter={(value) => formatDuration(value)} />
+              </PieChart>
+            </div>
+        </div>
+
+        </div>
+
+        {/* Bar Chart */}
+        <div className="mt-6 px-2">
+          <h2 className="text-md font-semibold mb-5">Time Tracked (Hours)</h2>
+          <BarChart width={1200} height={300} data={barData}>
+            <XAxis dataKey="day" />
+            <YAxis />
+            <Tooltip formatter={(value) => formatDuration(value * 3600)} />
+            <Bar dataKey="hours" fill="#8884d8" onClick={handleBarClick} style={{ cursor: "pointer" }} />
+          </BarChart>
+        </div>
+      </div>
+      
+    </div>
   );
 };
 
