@@ -179,6 +179,7 @@ const MyTasks = () => {
 
       setOpenDeleteAlert(false);
       toast.success("Task details deleted successfully");
+      window.location.reload();
       navigate('/user/tasks')
     } catch (error) {
       console.error(

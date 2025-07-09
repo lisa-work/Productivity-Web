@@ -72,6 +72,7 @@ const CreateUserTask = () => {
       toast.success("Task Created Successfully");
 
       clearData();
+      navigate("/user/tasks");
     } catch (error) {
       console.error("Error creating task:", error);
       setLoading(false);
@@ -179,6 +180,7 @@ const CreateUserTask = () => {
 
       setOpenDeleteAlert(false);
       toast.success("Task details deleted successfully");
+      window.location.reload();
       navigate('/user/tasks')
     } catch (error) {
       console.error(
