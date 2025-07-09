@@ -14,25 +14,43 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
   const { user } = useContext(UserContext);
   const currentUserId = user?._id;
 
+  // const getAllUsers = async () => {
+  //   try {
+  //     const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS);
+
+  //     const filteredUsers = response.data.filter(
+  //       (user) => user._id !== currentUserId
+  //     );
+
+  //     setAllUsers(filteredUsers);
+
+  //     if (Array.isArray(response.data) && response.data.length > 0) {
+  //       setAllUsers(response.data);
+  //     } else {
+  //       console.error("Unexpected response format:", response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching users:", error);
+  //   }
+  // };
+
   const getAllUsers = async () => {
-    try {
-      const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS);
+  try {
+    const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS);
 
+    if (Array.isArray(response.data) && response.data.length > 0) {
       const filteredUsers = response.data.filter(
-        (user) => user._id !== currentUserId
+        (u) => u._id !== currentUserId
       );
-
       setAllUsers(filteredUsers);
-
-      if (Array.isArray(response.data) && response.data.length > 0) {
-        setAllUsers(response.data);
-      } else {
-        console.error("Unexpected response format:", response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching users:", error);
+    } else {
+      console.error("Unexpected response format:", response.data);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
+
 
   const toggleUserSelection = (userId) => {
     setTempSelectedUsers((prev) =>
