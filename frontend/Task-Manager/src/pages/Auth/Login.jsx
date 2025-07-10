@@ -2,13 +2,11 @@ import React, { useContext, useState } from "react";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/Inputs/Input";
-import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { UserContext } from "../../context/userContext";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -19,11 +17,6 @@ const Login = () => {
   // Handle Login Form Submit
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    // if (!validateEmail(email)) {
-    //   setError("Please enter a valid email address.");
-    //   return;
-    // }
 
     if (!password) {
       setError("Please enter the password");
@@ -45,13 +38,6 @@ const Login = () => {
         localStorage.setItem("token", token);
         updateUser(response.data);
         navigate("/user/dashboard");
-
-        //Redirect based on role
-        // if (role === "admin") {
-        //   navigate("/admin/dashboard");
-        // } else {
-        //   navigate("/user/dashboard");
-        // }
       }
     } catch (error){
       if (error.response && error.response.data.message) {
@@ -70,7 +56,6 @@ const Login = () => {
           Please enter your details to log in
         </p>
 
-
         <form onSubmit={handleLogin}>
 
           <Input
@@ -80,14 +65,6 @@ const Login = () => {
             placeholder="John123"
             type="text"
           />
-
-          {/* <Input
-            value={email}
-            onChange={({ target }) => setEmail(target.value)}
-            label="Email Address"
-            placeholder="john@example.com"
-            type="text"
-          /> */}
 
           <Input
             value={password}

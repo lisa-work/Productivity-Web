@@ -15,9 +15,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState(null);
-
   const {updateUser} = useContext(UserContext)
   const navigate = useNavigate();
 
@@ -67,13 +65,6 @@ const SignUp = () => {
         localStorage.setItem("token", token);
         updateUser(response.data);
         navigate("/user/dashboard");
-
-        //Redirect based on role
-        // if (role === "admin") {
-        //   navigate("/admin/dashboard");
-        // } else {
-        //   navigate("/user/dashboard");
-        // }
       }
     } catch (error){
       if (error.response && error.response.data.message) {
@@ -127,14 +118,6 @@ const SignUp = () => {
               placeholder="Min 8 Characters"
               type="password"
             />
-
-            {/* <Input
-              value={adminInviteToken}
-              onChange={({ target }) => setAdminInviteToken(target.value)}
-              label="Admin Invite Token"
-              placeholder="7 Digit Code"
-              type="text"
-            /> */}
           </div>
 
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}

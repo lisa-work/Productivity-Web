@@ -8,7 +8,6 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdBookmarkRemove } from "react-icons/md";
 import { IoMdBookmark } from "react-icons/io";
 
-// 🟢 Countdown form modal for create/edit
 const CountdownFormModal = ({ onClose, onSuccess, event }) => {
   const isEditing = !!event;
   const [formData, setFormData] = useState({
@@ -65,13 +64,7 @@ const CountdownFormModal = ({ onClose, onSuccess, event }) => {
             onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
             required
           />
-          {/* <input
-            type="file"
-            className="w-full"
-            onChange={(e) => setImage(e.target.files[0])}
-            accept="image/*"
-          /> */}
-          
+   
 <div className="flex items-center gap-3">
   <label
     htmlFor="eventImage"

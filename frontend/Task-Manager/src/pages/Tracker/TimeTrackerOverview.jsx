@@ -11,7 +11,6 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a28eff", "#ff6e6e"
 
 const TimeReportPage = () => {
   const [logs, setLogs] = useState([]);
-  // const [range, setRange] = useState([{ startDate: new Date(), endDate: new Date(), key: "selection" }]);
   const [groupBy, setGroupBy] = useState("daily");
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
@@ -76,12 +75,7 @@ const chartWidth = Math.min(screenWidth - 300, 300);
     groupedByTask[taskName] = (groupedByTask[taskName] || 0) + log.duration;
   });
 
-  // const barData = Object.entries(groupedByDate).map(([day, duration]) => ({
-  //   day,
-  //   hours: +(duration / 3600),
-  // }));
-
-   const handleBarClick = (data) => {
+  const handleBarClick = (data) => {
   const startStr = data.startDate.toISOString();
   const endStr = data.endDate.toISOString();
 
@@ -168,22 +162,6 @@ if (groupBy === "daily") {
     </ul>
   );
 };
-
-// const SmallLegend = ({ payload }) => {
-//   return (
-//     <ul className="text-sm space-y-2">
-//       {payload.map((entry, index) => (
-//         <li key={`item-${index}`} className="flex items-center space-x-2">
-//           <span
-//             className="w-3 h-3 inline-block rounded-sm"
-//             style={{ backgroundColor: entry.color }}
-//           />
-//           <span>{entry.value}</span>
-//         </li>
-//       ))}
-//     </ul>
-//   );
-// };
 
   const logsByDayAndTask = {};
   filteredLogs.forEach((log) => {
