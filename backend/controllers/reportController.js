@@ -16,7 +16,7 @@ const exportTasksReport = async (req, res) => {
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet("Assigned Tasks Report");
 
-      const formatTime = (seconds) => {
+    const formatTime = (seconds) => {
         const hrs = Math.floor(seconds / 3600);
         const mins = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
