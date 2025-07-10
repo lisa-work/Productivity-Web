@@ -211,8 +211,8 @@ useEffect(() => {
       </div>
     )}
 
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6 cursor-pointer">
-        
         {allTasks.length > 0 && (
         <div>
           <div className="card cursor-pointer">
@@ -227,7 +227,7 @@ useEffect(() => {
             />
           </div>
         </div>
-      )}
+        )}
 
         {allTasks.length > 0 && (
         <div>
