@@ -160,7 +160,7 @@ const CountdownPage = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {events.map((event) => {
-              const daysLeft = moment(event.eventDate).diff(moment(), "days");
+              const daysLeft = moment.utc(event.eventDate).diff(moment(), "days");
               return (
                 <div
                   key={event._id}
@@ -173,7 +173,7 @@ const CountdownPage = () => {
                     <div className="space-y-3">
                       <h4 className="font-extrabold text-lg">{event.eventName}</h4>
                       <p className="text-3xl font-bold">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
-                      <p className="text-sm font-bold">{moment(event.eventDate).format("MMM D, YYYY")}</p>
+                      <p className="text-sm font-bold">{moment.utc(event.eventDate).format("MMM D, YYYY")}</p>
                     </div>
                     <div className="flex gap-2 mt-2">
   <button

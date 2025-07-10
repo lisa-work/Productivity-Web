@@ -1,9 +1,12 @@
 require("dotenv").config();
+
+// Import necessary modules
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const connectDB = require("./config/db");
 
+// Import Routes
 const authRoutes = require("./routes/authRoutes")
 const userRoutes = require("./routes/userRoutes")
 const taskRoutes = require("./routes/taskRoutes")
@@ -12,6 +15,7 @@ const userAddonRoutes = require("./routes/userAddonRoutes");
 const timelogRoutes = require("./routes/timelogRoutes");
 const countdownRoutes = require("./routes/countdownRoutes");
 
+// Initialize Express app
 const app = express();
 
 // Middleware to handle CORS
