@@ -172,8 +172,8 @@ useEffect(() => {
           <div
             key={event._id}
             className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
-            // style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
-            style={{ backgroundImage: `url('/placeholder.jpg')` }}
+            style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
+            // style={{ backgroundImage: `url('/placeholder.jpg')` }}
           >
             <div className="absolute inset-0 bg-black/20 rounded-xl" />
             <div className="relative z-10 flex flex-col justify-between h-full">
@@ -200,7 +200,7 @@ useEffect(() => {
       </div>
 
     {hasTimeTracked && (
-      <div>
+      <div className="w-max-screen">
         <TimeTrackerOverview
           allTasks={allTasks}
           onTaskClick={(task) => {
@@ -212,6 +212,7 @@ useEffect(() => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
         
+        {allTasks.length > 0 && (
         <div>
           <div className="card">
             <div className="flex items-center justify-between">
@@ -224,7 +225,9 @@ useEffect(() => {
             />
           </div>
         </div>
+      )}
 
+        {allTasks.length > 0 && (
         <div>
           <div className="card">
             <div className="flex items-center justify-between">
@@ -236,6 +239,7 @@ useEffect(() => {
             />
           </div>
         </div>
+        )}
 
         <div className="md:col-span-2">
           <div className="card">

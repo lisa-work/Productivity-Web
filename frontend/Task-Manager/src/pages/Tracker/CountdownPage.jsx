@@ -165,8 +165,8 @@ const CountdownPage = () => {
                 <div
                   key={event._id}
                   className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
-                //   style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
-                style={{ backgroundImage: `url('/placeholder.jpg')` }}
+                  style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
+                // style={{ backgroundImage: `url('/placeholder.jpg')` }}
                 >
                   <div className="absolute inset-0 bg-black/20 rounded-xl z-0" />
                   <div className="relative z-10 flex flex-col justify-between h-full">

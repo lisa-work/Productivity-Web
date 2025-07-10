@@ -35,7 +35,7 @@ useEffect(() => {
   return () => window.removeEventListener("resize", handleResize);
 }, []);
 
-const chartWidth = Math.min(screenWidth - 40, 800);
+const chartWidth = Math.min(screenWidth - 300, 300);
 
   const fetchLogs = async () => {
     const start = range[0].startDate.toISOString();
@@ -198,7 +198,7 @@ if (groupBy === "daily") {
 
   return (
 <div className="hidden xl:block">
-      <div className="hidden p-6 w-full mt-5 rounded-xl shadow-lg hover:shadow-md transition-shadow duration-200">
+      <div className="hidden p-6 w-fit mt-5 rounded-xl shadow-lg hover:shadow-md transition-shadow duration-200">
         <div className="flex flex-col justify-center space-y-3">
         <h1 className="text-xl md:text-2xl text-primary font-bold mb-3">Time Tracker Report</h1>
         <div className="flex flex-col items-start justify-center">
@@ -259,7 +259,7 @@ if (groupBy === "daily") {
         {/* Bar Chart */}
         <div className="mt-6 px-2">
           <h2 className="text-md font-semibold mb-5">Time Tracked (Hours)</h2>
-          <BarChart width={1150} height={300} data={barData}>
+          <BarChart width={chartWidth} height={300} data={barData}>
             <XAxis dataKey="day" />
             <YAxis />
             <Tooltip formatter={(value) => formatDuration(value * 3600)} />
