@@ -4,9 +4,7 @@ import AvatarGroup from "../AvatarGroup";
 import { LuPaperclip } from "react-icons/lu";
 import moment from "moment";
 import { MdDelete } from "react-icons/md";
-import { useLocation } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
-import { API_PATHS } from "../../utils/apiPaths";
 import { IoPlaySharp } from "react-icons/io5";
 import { FaStopCircle } from "react-icons/fa";
 import { useState } from "react";
@@ -32,15 +30,12 @@ const TaskCard = ({
   onTimeUpdate
 }) => {
   // Set default value for timeTracked if undefined
-  const trackedTime = timeTracked || 0;
   const getStatusTagColor = () => {
     switch (status) {
       case "In Progress":
         return "text-cyan-500 bg-cyan-50 border border-cyan-500/10";
-
       case "Completed":
         return "text-lime-500 bg-lime-50 border border-lime-500/20";
-
       default:
         return "text-violet-500 bg-violet-50 border border-violet-500/10";
     }
@@ -50,10 +45,8 @@ const TaskCard = ({
     switch (priority) {
       case "Low":
         return "text-emerald-500 bg-emerald-50 border border-emerald-500/10";
-
       case "Medium":
         return "text-amber-500 bg-amber-50 border border-amber-500/10";
-
       default:
         return "text-rose-500 bg-rose-50 border border-rose-500/10";
     }
@@ -97,8 +90,6 @@ const handleToggleTimer = async (e) => {
     const elapsedMs = Date.now() - startTimeRef.current;
     const duration = Math.floor(elapsedMs / 1000);
 
-    const newTrackedTime = displaySeconds + duration;
-
     setLoading(true);
 
     try {
@@ -109,18 +100,9 @@ const handleToggleTimer = async (e) => {
         duration,
       });
 
-      // const res = await axiosInstance.put(`/api/tasks/${taskId}/track-time`, {
-      //   timeTracked: newTrackedTime,
-      // });
-
       const res = await axiosInstance.put(`/api/tasks/${taskId}/track-time`, {
         trackedSeconds: duration,
       });
-
-      // const updatedTime = res.data.task.timeTracked;
-      // setDisplaySeconds(updatedTime);
-      // setSessionSeconds(0);
-      // onTimeUpdate?.(taskId, updatedTime);
 
       const updatedTime = res.data.task.timeTracked;
       setDisplaySeconds(updatedTime);
@@ -143,7 +125,8 @@ const handleToggleTimer = async (e) => {
     return `${hrs}h ${mins}m ${secs}s`;
   };
 
-  return <div
+  return (
+    <div
       className="bg-white rounded-xl py-4 shadow-md shadow-gray-100 border border-gray-200/50 cursor-pointer"
       onClick={onClick}
     >
@@ -245,6 +228,7 @@ const handleToggleTimer = async (e) => {
         </div>
       </div>
     </div>
+  );
 };
 
 export default TaskCard;

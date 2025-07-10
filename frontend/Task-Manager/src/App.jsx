@@ -1,19 +1,15 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
-
 import UserDashboard from "./pages/User/UserDashboard";
 import MyTasks from "./pages/User/MyTasks";
 import ViewTaskDetails from "./pages/User/ViewTaskDetails";
-
 import UserProvider, { UserContext } from "./context/userContext";
 import { Toaster } from "react-hot-toast";
 import CreateUserTask from "./pages/User/CreateUserTask";
 import TimeReportPage from "./pages/Tracker/TimeReportPage";
 import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
-import CreateTask from "./pages/Admin/CreateTask";
 import CountdownPage from "./pages/Tracker/CountdownPage";
-// import ManageTasks from "./pages/Admin/ManageTasks";
 
 const App = () => {
   return (
@@ -23,27 +19,12 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
-
-            {/* Admin Routes */}
-            <Route>
-              {/* <Route path="/admin/dashboard" element={<Dashboard />} /> */}
-              {/* <Route path="/admin/tasks" element={<ManageTasks />} /> */}
-              {/* <Route path="/admin/create-task" element={<CreateTask />} />
-              <Route path="/admin/users" element={<ManageUsers />} /> */}
-              <Route path="/admin/create-task" element={<CreateTask />} />
-            </Route>
-
-            {/* User Routes */}
-            
-              <Route path="/user/dashboard" element={<UserDashboard />} />
-              <Route path="/user/tasks" element={<MyTasks />} />
-              <Route path="/user/create-task" element={<CreateUserTask />} />
-              <Route path="/user/time-tracker" element={<TimeReportPage />} />
-              <Route path="/user/countdown" element={<CountdownPage />} />
-              <Route
-                path="/user/task-details/:id"
-                element={<ViewTaskDetails />}
-              />
+            <Route path="/user/dashboard" element={<UserDashboard />} />
+            <Route path="/user/tasks" element={<MyTasks />} />
+            <Route path="/user/create-task" element={<CreateUserTask />} />
+            <Route path="/user/time-tracker" element={<TimeReportPage />} />
+            <Route path="/user/countdown" element={<CountdownPage />} />
+            <Route path="/user/task-details/:id" element={<ViewTaskDetails />} />
 
              {/* Default Route */}
             <Route path="/" element={<Root />} />
@@ -53,7 +34,6 @@ const App = () => {
 
       <Toaster
         toastOptions={{
-          className: "",
           style: {
             fontSize: "13px",
           },

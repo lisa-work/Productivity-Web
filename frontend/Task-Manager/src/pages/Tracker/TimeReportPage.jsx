@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DateRangePicker } from "react-date-range";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Legend, ResponsiveContainer } from "recharts";
 import axiosInstance from "../../utils/axiosInstance";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -11,7 +11,6 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#a28eff", "#ff6e6e"
 
 const TimeReportPage = () => {
   const [logs, setLogs] = useState([]);
-  // const [range, setRange] = useState([{ startDate: new Date(), endDate: new Date(), key: "selection" }]);
   const [groupBy, setGroupBy] = useState("daily");
   const [expandedRows, setExpandedRows] = useState({});
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -85,11 +84,6 @@ const chartWidth = Math.min(screenWidth - 40, 800);
     groupedByDate[dateKey] = (groupedByDate[dateKey] || 0) + log.duration;
     groupedByTask[taskName] = (groupedByTask[taskName] || 0) + log.duration;
   });
-
-  // const barData = Object.entries(groupedByDate).map(([day, duration]) => ({
-  //   day,
-  //   hours: +(duration / 3600),
-  // }));
 
   const handleBarClick = (data) => {
   const startStr = data.startDate.toISOString();
@@ -180,22 +174,6 @@ if (groupBy === "daily") {
   );
 };
 
-// const SmallLegend = ({ payload }) => {
-//   return (
-//     <ul className="text-sm space-y-2">
-//       {payload.map((entry, index) => (
-//         <li key={`item-${index}`} className="flex items-center space-x-2">
-//           <span
-//             className="w-3 h-3 inline-block rounded-sm"
-//             style={{ backgroundColor: entry.color }}
-//           />
-//           <span>{entry.value}</span>
-//         </li>
-//       ))}
-//     </ul>
-//   );
-// };
-
   const logsByDayAndTask = {};
   filteredLogs.forEach((log) => {
     const dateKey = new Date(log.startTime).toLocaleDateString();
@@ -224,7 +202,7 @@ if (groupBy === "daily") {
         </div>
 
         {selectedTask && (
-          <button onClick={() => navigate(".")} className="mt-4 px-3 py-1 bg-primary/20 text-white rounded">
+          <button onClick={() => navigate(".")} className="mt-4 px-3 py-1 bg-primary/50 text-white rounded cursor-pointer">
             Clear Task Filter: {selectedTask}
           </button>
         )}
@@ -293,13 +271,15 @@ if (groupBy === "daily") {
 
         {/* Bar Chart */}
         <div className="mt-6 px-2">
-          <h2 className="text-md font-semibold mb-5">Time Tracked (Hours)</h2>
-          <BarChart width={chartWidth} height={300} data={barData}>
-            <XAxis dataKey="day" />
-            <YAxis />
-            <Tooltip formatter={(value) => formatDuration(value * 3600)} />
-            <Bar dataKey="hours" fill="#8884d8" onClick={handleBarClick} style={{ cursor: "pointer" }}/>
-          </BarChart>
+          <h2 className="text-md font-semibold mb-5 hidden md:block">Time Tracked (Hours)</h2>
+          <ResponsiveContainer width="100%" height={300} className="hidden md:block md:w-full">
+            <BarChart data={barData}>
+              <XAxis dataKey="day" />
+              <YAxis />
+              <Tooltip formatter={(value) => formatDuration(value * 3600)} />
+              <Bar dataKey="hours" fill="#8884d8" onClick={handleBarClick} style={{ cursor: "pointer" }}/>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
         {/* Daily Breakdown Table */}

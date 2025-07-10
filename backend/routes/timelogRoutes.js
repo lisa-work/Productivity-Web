@@ -8,4 +8,4 @@ router.post("/", protect, createTimeLog);
 router.get("/task/:taskId", protect, getLogsByTaskId);
 router.get("/", protect, getLogsByRange);
 
-module.exports = router; // ✅ Correct export
+module.exports = router;

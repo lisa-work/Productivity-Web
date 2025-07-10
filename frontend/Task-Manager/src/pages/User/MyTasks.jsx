@@ -45,42 +45,6 @@ const MyTasks = () => {
 
   const navigate = useNavigate();
 
-  // const getAllTasks = async () => {
-  //   try {
-  //     const response = await axiosInstance.get(API_PATHS.TASKS.GET_ALL_TASKS, {
-  //     params: {
-  //       status: statusParam || (filterStatus === "All" ? "" : filterStatus),
-  //       priority: priorityParam || (priorityTab === "All" ? "" : priorityTab),
-  //     },
-  //     });
-
-  //     setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : []);
-  //     setTasks(response.data.tasks);
-
-  //     // Map statusSummary data with fixed labels and order
-  //     const statusSummary = response.data?.statusSummary || {};
-
-  //     const statusArray = [
-  //       { label: "All", count: statusSummary.all || 0 },
-  //       { label: "Pending", count: statusSummary.pendingTasks || 0 },
-  //       { label: "In Progress", count: statusSummary.inProgressTasks || 0 },
-  //       { label: "Completed", count: statusSummary.completedTasks || 0 },
-  //     ];
-
-  //     setTabs(statusArray);
-  //   } catch (error) {
-  //     console.error("Error fetching users:", error);
-  //   }
-  // };
-
-  // const handleTimeUpdate = (taskId, newTimeTracked) => {
-  //   setTasks((prevTasks) =>
-  //     prevTasks.map((task) =>
-  //       task._id === taskId ? { ...task, timeTracked: newTimeTracked } : task
-  //     )
-  //   );
-  // };
-
   const getAllTasks = async () => {
   try {
     const isStatusAll = filterStatus === "All";
@@ -122,26 +86,6 @@ const MyTasks = () => {
     );
   };
 
-  // const handleDownloadReport = async () => {
-  //   try {
-  //     const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS, {
-  //         responseType: "blob",
-  //       });
-  
-  //       // Create a URL for the blob
-  //       const url = window.URL.createObjectURL(new Blob([response.data]));
-  //       const link = document.createElement("a");
-  //       link.href = url;
-  //       link.setAttribute("download", "task_details.xlsx");
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       link.parentNode.removeChild(link);
-  //       window.URL.revokeObjectURL(url);
-  //     } catch (error) {
-  //       console.error("Error downloading details:", error);
-  //       toast.error("Failed to download details. Please try again.");
-  //     }
-  //   };
 
  const handleDownloadReport = async () => {
   try {
@@ -163,14 +107,12 @@ const MyTasks = () => {
   }
 };
 
-
-    
   const handleClick = (taskId) => {
     navigate(`/user/task-details/${taskId}`);
   };
 
   const handleEditClick = (taskData) => {
-    navigate(`/admin/create-task`, { state: { taskId: taskData._id } });
+    navigate(`/user/create-task`, { state: { taskId: taskData._id } });
   };
 
   const deleteTask = async (taskId) => {
@@ -284,25 +226,6 @@ useEffect(() => {
     });
   }}
 />
-
-
-
-{/* {(statusParam || priorityParam) && (
-  <div className="my-2">
-    <button
-      onClick={clearFilter}
-      className="text-sm bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition"
-    >
-      Clear criteria:{" "}
-      <span className="font-semibold">
-        {statusParam ? `Status = ${statusParam}` : ""}
-        {statusParam && priorityParam ? ", " : ""}
-        {priorityParam ? `Priority = ${priorityParam}` : ""}
-      </span>
-    </button>
-  </div>
-)} */}
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {tasks?.map((item, index) => (
             <TaskCard

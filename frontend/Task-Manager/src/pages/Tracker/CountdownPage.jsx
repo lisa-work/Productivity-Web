@@ -8,7 +8,6 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdBookmarkRemove } from "react-icons/md";
 import { IoMdBookmark } from "react-icons/io";
 
-// 🟢 Countdown form modal for create/edit
 const CountdownFormModal = ({ onClose, onSuccess, event }) => {
   const isEditing = !!event;
   const [formData, setFormData] = useState({
@@ -65,13 +64,7 @@ const CountdownFormModal = ({ onClose, onSuccess, event }) => {
             onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
             required
           />
-          {/* <input
-            type="file"
-            className="w-full"
-            onChange={(e) => setImage(e.target.files[0])}
-            accept="image/*"
-          /> */}
-          
+   
 <div className="flex items-center gap-3">
   <label
     htmlFor="eventImage"
@@ -160,20 +153,20 @@ const CountdownPage = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {events.map((event) => {
-              const daysLeft = moment(event.eventDate).diff(moment(), "days");
+              const daysLeft = moment.utc(event.eventDate).diff(moment(), "days");
               return (
                 <div
                   key={event._id}
                   className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
-                //   style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
-                style={{ backgroundImage: `url('/placeholder.jpg')` }}
+                  style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
+                // style={{ backgroundImage: `url('/placeholder.jpg')` }}
                 >
                   <div className="absolute inset-0 bg-black/20 rounded-xl z-0" />
                   <div className="relative z-10 flex flex-col justify-between h-full">
                     <div className="space-y-3">
                       <h4 className="font-extrabold text-lg">{event.eventName}</h4>
                       <p className="text-3xl font-bold">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
-                      <p className="text-sm font-bold">{moment(event.eventDate).format("MMM D, YYYY")}</p>
+                      <p className="text-sm font-bold">{moment.utc(event.eventDate).format("MMM D, YYYY")}</p>
                     </div>
                     <div className="flex gap-2 mt-2">
   <button

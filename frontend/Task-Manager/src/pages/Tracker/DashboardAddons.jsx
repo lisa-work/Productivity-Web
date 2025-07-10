@@ -101,7 +101,7 @@ const DashboardAddons = () => {
           <button onClick={addGoal} ><IoMdAdd className="mx-0 text-primary"/></button>
         </div>
           {goals.length > 0 && (
-          <ul className="list-none text-sm">
+          <ul className="list-none text-sm overflow-auto ">
             {goals.map((goal, i) => (
               <li key={i} className="flex items-center my-2">
                 <input
@@ -130,7 +130,7 @@ const DashboardAddons = () => {
       {/* Upcoming Due Tasks */}
       <div className="card overflow-auto h-[50vh]">
         <h4 className="text-lg font-semibold mb-2 text-primary">Upcoming Due Tasks</h4>
-        <div className="flex mb-3">
+        <div className="flex mb-3 ">
         <ul className="list-disc pl-5 text-sm overflow-auto cursor-pointer">
           {upcomingTasks.map((task) => (
            <li

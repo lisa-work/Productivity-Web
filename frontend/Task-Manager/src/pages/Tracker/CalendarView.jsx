@@ -68,8 +68,8 @@ const CalendarView = ({ allTasks }) => {
     return result;
 };
 
-    const [timeLogs, setTimeLogs] = useState([]);
-    useEffect(() => {
+  const [timeLogs, setTimeLogs] = useState([]);
+  useEffect(() => {
       const fetchTimeLogs = async () => {
         try {
           const res = await axiosInstance.get("/api/time-logs"); // or add query params for filtering
@@ -81,40 +81,6 @@ const CalendarView = ({ allTasks }) => {
 
       fetchTimeLogs();
     }, []);
-
-//   useEffect(() => {
-//     let filtered = Array.isArray(allTasks) ? allTasks : [];
-
-//     if (filter.status !== "All") {
-//       filtered = filtered.filter((task) => task.status === filter.status);
-//     }
-//     if (filter.priority !== "All") {
-//       filtered = filtered.filter((task) => task.priority === filter.priority);
-//     }
-
-    // const formattedEvents = filtered.map((task) => {
-    //   const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
-    //   return {
-    //     title: task.title + formattedTime,
-    //     start: toUTCDate(task.dueDate),
-    //     end: toUTCDate(task.dueDate),
-    //     allDay: true,
-    //     taskData: task,
-    //   };
-    // });
-
-//     setEvents(formattedEvents); 
-
-//     const timeLogEvents = timeLogs.map((log) => ({
-//       title: `🕒 ${log.taskTitle}`, // or get task title from populated task
-//       start: toUTCDate(log.startTime),
-//       end: toUTCDate(log.endTime),
-//       allDay: false,
-//     }));
-
-//     setEvents([...formattedEvents, ...timeLogEvents]);
-
-// }, [allTasks, filter]);
 
 useEffect(() => {
   let filtered = Array.isArray(allTasks) ? allTasks : [];
@@ -170,7 +136,7 @@ useEffect(() => {
 
   const goToNextMonth = () => {
     setCurrentDate((prevDate) => {
-      const nextMonth = new Date(prevDate);
+    const nextMonth = new Date(prevDate);
       nextMonth.setMonth(prevDate.getMonth() + 1);
       return nextMonth;
     });
@@ -178,7 +144,7 @@ useEffect(() => {
 
   const goToPrevMonth = () => {
     setCurrentDate((prevDate) => {
-      const prevMonth = new Date(prevDate);
+    const prevMonth = new Date(prevDate);
       prevMonth.setMonth(prevDate.getMonth() - 1);
       return prevMonth;
     });
@@ -198,12 +164,11 @@ useEffect(() => {
       })
     : [];
 
-    const formatTime = (seconds) => {
-        const hrs = Math.floor(seconds / 3600);
-        const mins = Math.floor((seconds % 3600) / 60);
-        const secs = seconds % 60;
-
-        const pad = (n) => n.toString().padStart(2, "0");
+  const formatTime = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    const pad = (n) => n.toString().padStart(2, "0");
         return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
     };   
   
@@ -319,7 +284,6 @@ useEffect(() => {
               <p className="text-sm">
                 Selected Date: {selectedDate?.toUTCString()}
               </p>
-              {/* You can embed TaskForm here */}
             </div>
           )}
         </Modal>

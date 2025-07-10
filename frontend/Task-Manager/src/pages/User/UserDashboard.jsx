@@ -16,6 +16,7 @@ import CustomBarChart from "../../components/Charts/CustomBarChart";
 import DashboardAddons from "../Tracker/DashboardAddons";
 import CalendarView from "../Tracker/CalendarView";
 import TimeTrackerOverview from "../Tracker/TimeTrackerOverview";
+import { Cursor } from "mongoose";
 
 const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
@@ -172,8 +173,8 @@ useEffect(() => {
           <div
             key={event._id}
             className="rounded-xl text-white p-4 bg-cover bg-center relative h-[180px]"
-            // style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
-            style={{ backgroundImage: `url('/placeholder.jpg')` }}
+            style={{ backgroundImage: `url(${event.image || '/placeholder.jpg'})` }}
+            // style={{ backgroundImage: `url('/placeholder.jpg')` }}
           >
             <div className="absolute inset-0 bg-black/20 rounded-xl" />
             <div className="relative z-10 flex flex-col justify-between h-full">
@@ -200,7 +201,7 @@ useEffect(() => {
       </div>
 
     {hasTimeTracked && (
-      <div>
+      <div className="w-full">
         <TimeTrackerOverview
           allTasks={allTasks}
           onTaskClick={(task) => {
@@ -210,18 +211,19 @@ useEffect(() => {
       </div>
     )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6 cursor-pointer">
         {allTasks.length > 0 && (
         <div>
-          <div className="card">
-            <div className="flex items-center justify-between">
+          <div className="card cursor-pointer">
+            <div className="flex cursor-pointer items-center justify-between">
               <h5 className="font-medium">Task Distribution</h5>
             </div>
 
             <CustomPieChart
               data={pieChartData}
               colors={COLORS}
+              style={{ cursor: "pointer" }}
             />
           </div>
         </div>
