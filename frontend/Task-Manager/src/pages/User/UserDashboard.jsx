@@ -200,7 +200,7 @@ useEffect(() => {
       </div>
 
     {hasTimeTracked && (
-      <div className="w-max-screen">
+      <div className="w-full">
         <TimeTrackerOverview
           allTasks={allTasks}
           onTaskClick={(task) => {

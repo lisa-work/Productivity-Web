@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DateRangePicker } from "react-date-range";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Legend, ResponsiveContainer } from "recharts";
 import axiosInstance from "../../utils/axiosInstance";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -293,13 +293,15 @@ if (groupBy === "daily") {
 
         {/* Bar Chart */}
         <div className="mt-6 px-2">
-          <h2 className="text-md font-semibold mb-5">Time Tracked (Hours)</h2>
-          <BarChart width={chartWidth} height={300} data={barData}>
-            <XAxis dataKey="day" />
-            <YAxis />
-            <Tooltip formatter={(value) => formatDuration(value * 3600)} />
-            <Bar dataKey="hours" fill="#8884d8" onClick={handleBarClick} style={{ cursor: "pointer" }}/>
-          </BarChart>
+          <h2 className="text-md font-semibold mb-5 hidden md:block">Time Tracked (Hours)</h2>
+          <ResponsiveContainer width="100%" height={300} className="hidden md:block md:w-full">
+            <BarChart data={barData}>
+              <XAxis dataKey="day" />
+              <YAxis />
+              <Tooltip formatter={(value) => formatDuration(value * 3600)} />
+              <Bar dataKey="hours" fill="#8884d8" onClick={handleBarClick} style={{ cursor: "pointer" }}/>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
         {/* Daily Breakdown Table */}
