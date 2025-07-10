@@ -170,7 +170,7 @@ const MyTasks = () => {
   };
 
   const handleEditClick = (taskData) => {
-    navigate(`/admin/create-task`, { state: { taskId: taskData._id } });
+    navigate(`/user/create-task`, { state: { taskId: taskData._id } });
   };
 
   const deleteTask = async (taskId) => {

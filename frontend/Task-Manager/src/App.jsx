@@ -11,7 +11,6 @@ import CreateUserTask from "./pages/User/CreateUserTask";
 import TimeReportPage from "./pages/Tracker/TimeReportPage";
 import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
-import CreateTask from "./pages/Admin/CreateTask";
 import CountdownPage from "./pages/Tracker/CountdownPage";
 // import ManageTasks from "./pages/Admin/ManageTasks";
 
@@ -23,15 +22,6 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
-
-            {/* Admin Routes */}
-            <Route>
-              {/* <Route path="/admin/dashboard" element={<Dashboard />} /> */}
-              {/* <Route path="/admin/tasks" element={<ManageTasks />} /> */}
-              {/* <Route path="/admin/create-task" element={<CreateTask />} />
-              <Route path="/admin/users" element={<ManageUsers />} /> */}
-              <Route path="/admin/create-task" element={<CreateTask />} />
-            </Route>
 
             {/* User Routes */}
             
