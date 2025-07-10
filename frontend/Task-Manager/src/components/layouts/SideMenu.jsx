@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { SIDE_MENU_DATA, SIDE_MENU_USER_DATA } from "../../utils/data";
+import { SIDE_MENU_USER_DATA } from "../../utils/data";
 import { UserContext } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 
