@@ -16,7 +16,6 @@ import CustomBarChart from "../../components/Charts/CustomBarChart";
 import DashboardAddons from "../Tracker/DashboardAddons";
 import CalendarView from "../Tracker/CalendarView";
 import TimeTrackerOverview from "../Tracker/TimeTrackerOverview";
-import { Cursor } from "mongoose";
 
 const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
