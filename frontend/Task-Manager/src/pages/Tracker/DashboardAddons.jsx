@@ -12,6 +12,7 @@ const DashboardAddons = () => {
   const [allTasks, setAllTasks] = useState([]);
   const navigate = useNavigate();
 
+  // Add a new goal
   const addGoal = async () => {
     if (newGoal.trim()) {
       const updated = [...goals, { text: newGoal.trim(), checked: false }]
@@ -21,12 +22,14 @@ const DashboardAddons = () => {
     }
   };
 
+  // Remove a goal by index
   const removeGoal = async (index) => {
     const updated = goals.filter((_, i) => i !== index);
     setGoals(updated);
     await axiosInstance.put("/api/user-addons", { goals: updated, quickNotes });
   };
 
+  // Toggle goal checked state
   const toggleGoalChecked = async (index) => {
     const updated = goals.map((goal, i) =>
       i === index ? { ...goal, checked: !goal.checked } : goal
@@ -35,16 +38,18 @@ const DashboardAddons = () => {
     await axiosInstance.put("/api/user-addons", { goals: updated, quickNotes });
   };
 
+  // Automatically saves goals and quick notes to the backend
   useEffect(() => {
   const timeout = setTimeout(() => {
-    axiosInstance.put("/api/user-addons", {
-      goals,
-      quickNotes,
-    });
-  }, 800);
-  return () => clearTimeout(timeout);
-}, [goals, quickNotes]);
+        axiosInstance.put("/api/user-addons", {
+          goals,
+          quickNotes,
+        });
+      }, 800);
+      return () => clearTimeout(timeout);
+  }, [goals, quickNotes]);
 
+  // Fetch goals and quick notes from the backend on component mount
   useEffect(() => {
   const fetchData = async () => {
     const res = await axiosInstance.get("/api/user-addons");
@@ -54,6 +59,7 @@ const DashboardAddons = () => {
   fetchData();
   }, []);
 
+  // Fetch all tasks for upcoming tasks section
   useEffect(() => {
     const getAllTasks = async () => {
     try {
@@ -64,25 +70,18 @@ const DashboardAddons = () => {
       console.error("Error fetching all tasks:", error);
     }
   };
-
     getAllTasks();
   }, []);
 
+  // Filter and sort upcoming tasks
   const upcomingTasks = allTasks
   .filter(task => new Date(task.dueDate) >= new Date())
   .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
+  // Handle task click to navigate to details
   const handleClick = (taskId) => {
     navigate(`/user/task-details/${taskId}`);
   };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      console.log("Saving quickNotes:", quickNotes);
-      axiosInstance.put("/api/user-addons", { goals: goals || [], quickNotes });
-    }, 800);
-    return () => clearTimeout(timeout);
-  }, [quickNotes]);
 
   return (
     <div className="grid md:grid-cols-3 gap-6 mt-6">
