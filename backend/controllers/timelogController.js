@@ -79,8 +79,6 @@ exports.getLogsByRange = async (req, res) => {
   }
 };
 
-
-
 const getStartEndByRange = (range) => {
   const now = new Date();
   if (range === "daily") {

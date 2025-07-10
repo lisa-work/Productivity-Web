@@ -2,7 +2,7 @@ const Task = require("../models/Task");
 const mongoose = require("mongoose");
 const TimeLog = require("../models/TimeLog");
 
-// @desc    Get all tasks (Admin: all, User: only assigned tasks)
+// @desc    Get all tasks
 // @route   GET /api/tasks/
 // @access  Private
 const getTasks = async (req, res) => {
@@ -23,18 +23,6 @@ const getTasks = async (req, res) => {
       ...filter,
       assignedTo: { $in: [req.user._id] },
     }).populate("assignedTo", "name email profileImageUrl");
-
-    // if (req.user.role === "admin") {
-    //   tasks = await Task.find(filter).populate(
-    //     "assignedTo",
-    //     "name email profileImageUrl"
-    //   );
-    // } else {
-    //   tasks = await Task.find({
-    //     ...filter,
-    //     assignedTo: { $in: [userId] }, // ✅ more reliable match
-    //   }).populate("assignedTo", "name email profileImageUrl");
-    // }
 
     // Add completed todoChecklist count to each task
     tasks = await Promise.all(
@@ -70,27 +58,6 @@ const getTasks = async (req, res) => {
       assignedTo: { $in: [req.user._id] },
     });
 
-// const allTasks = await Task.countDocuments(
-//   req.user.role === "admin" ? {} : { assignedTo: { $in: [userId] } }
-// );
-
-//     const pendingTasks = await Task.countDocuments({
-//       ...filter,
-//       status: "Pending",
-//       ...(req.user.role !== "admin" && { assignedTo: { $in: [userId] } }),
-//     });
-
-//     const inProgressTasks = await Task.countDocuments({
-//       ...filter,
-//       status: "In Progress",
-//       ...(req.user.role !== "admin" && { assignedTo: { $in: [userId] } }),
-//     });
-
-//     const completedTasks = await Task.countDocuments({
-//       ...filter,
-//       status: "Completed",
-//       ...(req.user.role !== "admin" && { assignedTo: { $in: [userId] } }),
-//     });
 
     res.json({
       tasks,
@@ -126,7 +93,7 @@ const getTaskById = async (req, res) => {
 
 // @desc    Create a new task (Admin only)
 // @route   POST /api/tasks/
-// @access  Private (Admin)
+// @access  Private
 const createTask = async (req, res) => {
   try {
     let {
@@ -158,7 +125,7 @@ const createTask = async (req, res) => {
       assignedUsers.push(creatorId.toString());
     }
 
-    assignedTo = assignedUsers.map((id) => new mongoose.Types.ObjectId(id));
+    assignedTo = assignedUsers.map((id) => new mongoose.Schema.Types.ObjectId(id));
 
     const task = await Task.create({
       title,
@@ -178,7 +145,6 @@ const createTask = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 
 // @desc    Update task details
 // @route   PUT /api/tasks/:id
@@ -212,29 +178,14 @@ const updateTask = async (req, res) => {
   }
 };
 
-// @desc    Delete a task (Admin only)
-// @route   DELETE /api/tasks/:id
-// @access  Private (Admin)
-// const deleteTask = async (req, res) => {
-//   try {
-//     const task = await Task.findById(req.params.id);
-
-//     if (!task) return res.status(404).json({ message: "Task not found" });
-
-//     await task.deleteOne();
-//     res.json({ message: "Task deleted successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error", error: error.message });
-//   }
-// };
-
+// @desc    Delete a task and its related time logs
 const deleteTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
 
     if (!task) return res.status(404).json({ message: "Task not found" });
 
-    // ✅ Delete related time logs
+    // Delete related time logs
     await TimeLog.deleteMany({ taskId: task._id });
 
     await task.deleteOne();
@@ -252,14 +203,6 @@ const updateTaskStatus = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
-
-    const isAssigned = task.assignedTo.some(
-      (userId) => userId.toString() === req.user._id.toString()
-    );
-
-    // if (!isAssigned && req.user.role !== "admin") {
-    //   return res.status(403).json({ message: "Not authorized" });
-    // }
 
     task.status = req.body.status || task.status;
 
@@ -284,12 +227,6 @@ const updateTaskChecklist = async (req, res) => {
     const task = await Task.findById(req.params.id);
 
     if (!task) return res.status(404).json({ message: "Task not found" });
-
-    // if (!task.assignedTo.includes(req.user._id) && req.user.role !== "admin") {
-    //   return res
-    //     .status(403)
-    //     .json({ message: "Not authorized to update checklist" });
-    // }
 
     task.todoChecklist = todoChecklist; // Replace with updated checklist
 
@@ -322,81 +259,7 @@ const updateTaskChecklist = async (req, res) => {
   }
 };
 
-// @desc    Dashboard Data (Admin only)
-// @route   GET /api/tasks/dashboard-data
-// @access  Private
-const getDashboardData = async (req, res) => {
-  try {
-    // Fetch statistics
-    const totalTasks = await Task.countDocuments();
-    const pendingTasks = await Task.countDocuments({ status: "Pending" });
-    const completedTasks = await Task.countDocuments({ status: "Completed" });
-    const overdueTasks = await Task.countDocuments({
-      status: { $ne: "Completed" },
-      dueDate: { $lt: new Date() },
-    });
-
-    // Ensure all possible statuses are included
-    const taskStatuses = ["Pending", "In Progress", "Completed"];
-    const taskDistributionRaw = await Task.aggregate([
-      {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
-    const taskDistribution = taskStatuses.reduce((acc, status) => {
-      const formattedKey = status.replace(/\s+/g, ""); // Remove spaces for response keys
-      acc[formattedKey] =
-        taskDistributionRaw.find((item) => item._id === status)?.count || 0;
-      return acc;
-    }, {});
-    taskDistribution["All"] = totalTasks; // Add total count to taskDistribution
-
-    // Ensure all priority levels are included
-    const taskPriorities = ["Low", "Medium", "High"];
-    const taskPriorityLevelsRaw = await Task.aggregate([
-      {
-        $group: {
-          _id: "$priority",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
-    const taskPriorityLevels = taskPriorities.reduce((acc, priority) => {
-      acc[priority] =
-        taskPriorityLevelsRaw.find((item) => item._id === priority)?.count || 0;
-      return acc;
-    }, {});
-
-    // Fetch recent 10 tasks
-    const recentTasks = await Task.find()
-      .sort({ createdAt: -1 })
-      .limit(10)
-      .select("title status priority dueDate createdAt timeTracked");
-
-    res.status(200).json({
-      statistics: {
-        totalTasks,
-        pendingTasks,
-        completedTasks,
-        overdueTasks,
-      },
-      charts: {
-        taskDistribution,
-        taskPriorityLevels,
-      },
-      recentTasks,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
-
 // @desc    Dashboard Data (User-specific)
-// @route   GET /api/tasks/user-dashboard-data
-// @access  Private
 const getUserDashboardData = async (req, res) => {
   try {
     const userId = req.user._id; // Only fetch data for the logged-in user
@@ -464,31 +327,6 @@ const getUserDashboardData = async (req, res) => {
   }
 };
 
-// const updateTrackedTime = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { timeTracked } = req.body;
-
-//     if (typeof timeTracked !== "number" || timeTracked < 0) {
-//       return res.status(400).json({ message: "Invalid timeTracked value" });
-//     }
-
-//     const task = await Task.findById(id);
-//     if (!task) {
-//       return res.status(404).json({ message: "Task not found" });
-//     }
-
-//     // ✅ Set the tracked time instead of incrementing
-//     task.timeTracked = timeTracked;
-
-//     await task.save();
-
-//     res.json({ message: "Time tracked updated", task });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
 const updateTrackedTime = async (req, res) => {
   try {
     const { id } = req.params;
@@ -503,7 +341,6 @@ const updateTrackedTime = async (req, res) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    // ✅ Increment tracked time
     task.timeTracked += trackedSeconds;
 
     await task.save();
@@ -514,8 +351,6 @@ const updateTrackedTime = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   getTasks,
   getTaskById,
@@ -524,7 +359,6 @@ module.exports = {
   deleteTask,
   updateTaskStatus,
   updateTaskChecklist,
-  getDashboardData,
   getUserDashboardData,
   updateTrackedTime
 };
