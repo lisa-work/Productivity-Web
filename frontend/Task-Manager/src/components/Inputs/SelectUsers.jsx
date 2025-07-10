@@ -14,26 +14,6 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
   const { user } = useContext(UserContext);
   const currentUserId = user?._id;
 
-  // const getAllUsers = async () => {
-  //   try {
-  //     const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS);
-
-  //     const filteredUsers = response.data.filter(
-  //       (user) => user._id !== currentUserId
-  //     );
-
-  //     setAllUsers(filteredUsers);
-
-  //     if (Array.isArray(response.data) && response.data.length > 0) {
-  //       setAllUsers(response.data);
-  //     } else {
-  //       console.error("Unexpected response format:", response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching users:", error);
-  //   }
-  // };
-
   const getAllUsers = async () => {
   try {
     const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS);
@@ -60,11 +40,6 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
     );
   };
 
-  // const handleAssign = () => {
-  //   setSelectedUsers(tempSelectedUsers);
-  //   setIsModalOpen(false);
-  // };
-
   const handleAssign = () => {
   let updated = tempSelectedUsers;
 
@@ -90,33 +65,11 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
     getAllUsers();
   }, []);
 
-  // useEffect(() => {
-  //   if (selectedUsers.length === 0) {
-  //     setTempSelectedUsers([]);
-  //   }
-
-  //   return () => {};
-  // }, [selectedUsers]);
-
   useEffect(() => {
   if (selectedUsers.length === 0 && currentUserId) {
     setSelectedUsers([currentUserId]);
   }
 }, [currentUserId, selectedUsers.length, setSelectedUsers]);
-
-  // useEffect(() => {
-  // const fetch = async () => {
-  //   try {
-  //     const res = await axiosInstance.get("/api/users");
-  //     console.log("User data:", res.data);
-  //     setAllUsers(res.data?.users || []);
-  //   } catch (err) {
-  //     console.error("Fetch failed:", err.response?.data || err.message);
-  //   }
-  // };
-
-//   fetch();
-// }, []);
 
   return (
     <div className="space-y-4 mt-2">
@@ -140,49 +93,48 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
       <div className="space-y-4 h-[60vh] overflow-y-auto">
 
         <input
-  type="text"
-  placeholder="Search by name or email..."
-  value={searchQuery}
-  onChange={(e) => setSearchQuery(e.target.value)}
-  className="w-full p-2 mb-3 border border-gray-300 rounded-lg"
-/>
-
-  {allUsers.length === 0 ? (
-    <p className="text-gray-500">No users available to assign.</p>
-  ) : (
-    allUsers
-  .filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchQuery.toLowerCase())
-  )
-  .map((user) => (
-      <div
-        key={user._id}
-        className="flex items-center gap-4 p-3 border-b border-gray-200"
-      >
-        <img
-          src={user.profileImageUrl || "/placeholder.jpg"}
-          alt={user.name}
-          className="w-10 h-10 rounded-full"
+          type="text"
+          placeholder="Search by name or email..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 mb-3 border border-gray-300 rounded-lg"
         />
-        <div className="flex-1">
-          <p className="font-medium text-gray-800 dark:text-white">
-            {user.name}
-          </p>
-          <p className="text-[13px] text-gray-500">{user.email}</p>
+
+          {allUsers.length === 0 ? (
+            <p className="text-gray-500">No users available to assign.</p>
+          ) : (
+            allUsers
+          .filter((user) =>
+            user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .map((user) => (
+              <div
+                key={user._id}
+                className="flex items-center gap-4 p-3 border-b border-gray-200"
+              >
+                <img
+                  src={user.profileImageUrl || "/placeholder.jpg"}
+                  alt={user.name}
+                  className="w-10 h-10 rounded-full"
+                />
+                <div className="flex-1">
+                  <p className="font-medium text-gray-800 dark:text-white">
+                    {user.name}
+                  </p>
+                  <p className="text-[13px] text-gray-500">{user.email}</p>
+                </div>
+
+                <input
+                  type="checkbox"
+                  checked={tempSelectedUsers.includes(user._id)}
+                  onChange={() => toggleUserSelection(user._id)}
+                  className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded-sm outline-none"
+                />
+              </div>
+            ))
+          )}
         </div>
-
-        <input
-          type="checkbox"
-          checked={tempSelectedUsers.includes(user._id)}
-          onChange={() => toggleUserSelection(user._id)}
-          className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded-sm outline-none"
-        />
-      </div>
-    ))
-  )}
-</div>
-
 
          <div className="flex justify-end gap-4 pt-4">
           <button className="card-btn" onClick={() => setIsModalOpen(false)}>

@@ -4,7 +4,7 @@ import { UserContext } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 
 const SideMenu = ({ activeMenu }) => {
-    const { user, clearUser } = useContext(UserContext);
+  const { user, clearUser } = useContext(UserContext);
   const [sideMenuData, setSideMenuData] = useState([]);
 
   const navigate = useNavigate();
@@ -40,12 +40,6 @@ const SideMenu = ({ activeMenu }) => {
             className="w-20 h-20 bg-slate-400 rounded-full"
           />
         </div>
-
-        {/* {user?.role === "admin" && (
-          <div className="text-[10px] font-medium text-white bg-primary px-3 py-0.5 rounded mt-1">
-            Admin
-          </div>
-        )} */}
 
         <h5 className="text-gray-950 font-medium leading-6 mt-3">
           {user?.name || ""}

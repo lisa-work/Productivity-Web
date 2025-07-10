@@ -14,9 +14,9 @@ const Navbar = ({ activeMenu }) => {
         }}
       >
         {openSideMenu ? (
-          <HiOutlineX className="text-2xl" />
+          <HiOutlineX className="text-2xl text-primary" />
         ) : (
-          <HiOutlineMenu className="text-2xl" />
+          <HiOutlineMenu className="text-2xl text-primary" />
         )}
       </button>
 
