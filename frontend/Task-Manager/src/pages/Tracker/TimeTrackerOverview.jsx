@@ -198,7 +198,7 @@ if (groupBy === "daily") {
 
   return (
 <div>
-      <div className="p-6 w-full mt-5 rounded-xl shadow-xl hover:shadow-2xl duration-200 cursor-pointer" 
+      <div className="p-6 w-full mt-5 rounded-xl shadow-lg hover:shadow-xl duration-200 cursor-pointer" 
       onClick={() => navigate("/user/time-tracker")}>
         <div className="flex flex-col justify-center space-y-3">
         <h1 className="text-xl md:text-2xl text-primary font-bold mb-3">Time Tracker Report</h1>

@@ -16,6 +16,7 @@ import CustomBarChart from "../../components/Charts/CustomBarChart";
 import DashboardAddons from "../Tracker/DashboardAddons";
 import CalendarView from "../Tracker/CalendarView";
 import TimeTrackerOverview from "../Tracker/TimeTrackerOverview";
+import { Cursor } from "mongoose";
 
 const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
@@ -210,25 +211,26 @@ useEffect(() => {
       </div>
     )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6 cursor-pointer">
         
         {allTasks.length > 0 && (
-        <div>
-          <div className="card">
-            <div className="flex items-center justify-between">
+        <div onClick={() => navigate('/user/tasks')} className="cursor-pointer">
+          <div className="card cursor-pointer">
+            <div className="flex cursor-pointer items-center justify-between">
               <h5 className="font-medium">Task Distribution</h5>
             </div>
 
             <CustomPieChart
               data={pieChartData}
               colors={COLORS}
+              style={{ cursor: "pointer" }}
             />
           </div>
         </div>
       )}
 
         {allTasks.length > 0 && (
-        <div>
+        <div onClick={() => navigate('/user/tasks')} className="cursor-pointer">
           <div className="card">
             <div className="flex items-center justify-between">
               <h5 className="font-medium">Task Priority Levels</h5>
