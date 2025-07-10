@@ -214,7 +214,7 @@ useEffect(() => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6 cursor-pointer">
         
         {allTasks.length > 0 && (
-        <div onClick={() => navigate('/user/tasks')} className="cursor-pointer">
+        <div>
           <div className="card cursor-pointer">
             <div className="flex cursor-pointer items-center justify-between">
               <h5 className="font-medium">Task Distribution</h5>
@@ -230,7 +230,7 @@ useEffect(() => {
       )}
 
         {allTasks.length > 0 && (
-        <div onClick={() => navigate('/user/tasks')} className="cursor-pointer">
+        <div>
           <div className="card">
             <div className="flex items-center justify-between">
               <h5 className="font-medium">Task Priority Levels</h5>

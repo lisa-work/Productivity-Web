@@ -224,7 +224,7 @@ if (groupBy === "daily") {
         </div>
 
         {selectedTask && (
-          <button onClick={() => navigate(".")} className="mt-4 px-3 py-1 bg-primary/20 text-white rounded">
+          <button onClick={() => navigate(".")} className="mt-4 px-3 py-1 bg-primary/50 text-white rounded cursor-pointer">
             Clear Task Filter: {selectedTask}
           </button>
         )}
