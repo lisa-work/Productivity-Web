@@ -189,7 +189,7 @@ useEffect(() => {
           />
           
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          {tasks?.map((item, index) => (
+          {tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))?.map((item, index) => (
             <TaskCard
               key={item._id}
               taskId={item._id}

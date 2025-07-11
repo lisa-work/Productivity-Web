@@ -248,7 +248,7 @@ useEffect(() => {
           <p>No upcoming tasks found.</p>
         ) : (
           <ul className="list-disc pl-5">
-            {filteredTasksForDate.map((task) => (
+            {filteredTasksForDate.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).map((task) => (
               <li
                 key={task._id}
                 className="mb-1 cursor-pointer text-[14px] leading-6 hover:text-primary hover:underline"

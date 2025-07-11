@@ -23,15 +23,6 @@ const TaskListTable = ({tableData}) => {
     }
   };
 
-const formatDuration = (seconds) => {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-
-  const pad = (n) => String(n).padStart(2, "0");
-  return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-};
-
   const formatTime = (seconds) => {
         const hrs = Math.floor(seconds / 3600);
         const mins = Math.floor((seconds % 3600) / 60);
@@ -54,7 +45,7 @@ const formatDuration = (seconds) => {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((task) => (
+          {tableData.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).map((task) => (
             <tr key={task._id} className="text-center border-t border-gray-200" onClick={() => navigate(`/user/task-details/${task._id}`)} style={{ cursor: 'pointer' }}>
               <td className="text-left my-3 mx-4 text-gray-700 text-[13px] line-clamp-1 overflow-hidden underline underline-offset-2 hover:text-primary">{task.title}</td>
               <td className="text-center py-4 px-4">
