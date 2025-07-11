@@ -172,7 +172,7 @@ useEffect(() => {
     };   
   
   return (
-    <div className="p-4 bg-white rounded-xl shadow">
+    <div className="p-4 bg-yellow-100 rounded-xl shadow">
       {/* Filters */}
       <div className="flex gap-4 mb-4">
         <select
@@ -236,7 +236,7 @@ useEffect(() => {
         view={currentView}
         onNavigate={handleNavigate}
         onView={handleViewChange}
-        style={{ height: 500 }}
+        style={{ height: 500, fontSize: "10px" }}
       />
 
       {/* Tasks list */}
