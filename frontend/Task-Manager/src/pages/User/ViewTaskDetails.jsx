@@ -88,6 +88,7 @@ const ViewTaskDetails = () => {
     }
     return () => {};
   }, [id]);
+  
   return (
     <DashboardLayout activeMenu="My Tasks">
       <div className="mt-5">

@@ -76,14 +76,6 @@ const DashboardAddons = () => {
     navigate(`/user/task-details/${taskId}`);
   };
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      console.log("Saving quickNotes:", quickNotes);
-      axiosInstance.put("/api/user-addons", { goals: goals || [], quickNotes });
-    }, 800);
-    return () => clearTimeout(timeout);
-  }, [quickNotes]);
-
   return (
     <div className="grid md:grid-cols-3 gap-6 mt-6">
 
