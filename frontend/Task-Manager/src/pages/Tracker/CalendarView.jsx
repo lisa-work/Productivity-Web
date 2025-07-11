@@ -172,7 +172,7 @@ useEffect(() => {
     };   
   
   return (
-    <div className="p-4 bg-yellow-100 rounded-xl shadow">
+    <div className="p-4 rounded-xl shadow">
       {/* Filters */}
       <div className="flex gap-4 mb-4">
         <select
