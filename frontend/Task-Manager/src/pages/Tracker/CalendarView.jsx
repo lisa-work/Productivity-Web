@@ -172,7 +172,7 @@ useEffect(() => {
     };   
   
   return (
-    <div className="p-4 bg-white rounded-xl shadow">
+    <div className="p-4 rounded-xl shadow">
       {/* Filters */}
       <div className="flex gap-4 mb-4">
         <select
@@ -236,7 +236,7 @@ useEffect(() => {
         view={currentView}
         onNavigate={handleNavigate}
         onView={handleViewChange}
-        style={{ height: 500 }}
+        style={{ height: 500, fontSize: "10px" }}
       />
 
       {/* Tasks list */}
@@ -248,10 +248,10 @@ useEffect(() => {
           <p>No upcoming tasks found.</p>
         ) : (
           <ul className="list-disc pl-5">
-            {filteredTasksForDate.map((task) => (
+            {filteredTasksForDate.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).map((task) => (
               <li
                 key={task._id}
-                className="mb-1 cursor-pointer hover:text-primary hover:underline"
+                className="mb-1 cursor-pointer text-[14px] leading-6 hover:text-primary hover:underline"
                 onClick={() => handleClick(task._id)}
               >
                 <strong>{task.title}</strong> — Due{" "}
