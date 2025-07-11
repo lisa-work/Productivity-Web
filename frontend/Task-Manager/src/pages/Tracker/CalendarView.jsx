@@ -28,7 +28,7 @@ const localizer = dateFnsLocalizer({
 });
 
 const CalendarView = ({ allTasks }) => {
-  const navigate = useNavigate(); // <-- Moved inside component!
+  const navigate = useNavigate();
 
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -39,10 +39,10 @@ const CalendarView = ({ allTasks }) => {
   const [selectedDate, setSelectedDate] = useState(startOfDay(new Date()));
 
   const toUTCDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-  );
+    const date = new Date(dateString);
+    return new Date(
+      Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    );
   };
 
   const handleNavigate = (date) => {
@@ -104,7 +104,7 @@ useEffect(() => {
   );
 
   return {
-    title: task.title + formattedTime,
+    title: task.title,
     start: shiftedDate,
     end: shiftedDate,
     allDay: true,
