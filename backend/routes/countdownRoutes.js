@@ -9,7 +9,7 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
   const { eventName, eventDate } = req.body;
 
   // const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-  const imagePath = req.file
+  const imageUrl = req.file
   ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
   : null;
 
@@ -17,7 +17,7 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
     userId: req.user._id,
     eventName,
     eventDate,
-    image: imagePath,
+    image: imageUrl,
   });
 
   await newEvent.save();
