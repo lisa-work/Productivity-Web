@@ -93,7 +93,6 @@ useEffect(() => {
   }
 
  const formattedEvents = filtered.map((task) => {
-  const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
 
   const dueDate = new Date(task.dueDate);
   // Shift 1 day later

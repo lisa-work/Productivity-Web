@@ -65,28 +65,28 @@ const CountdownFormModal = ({ onClose, onSuccess, event }) => {
             required
           />
    
-<div className="flex items-center gap-3">
-  <label
-    htmlFor="eventImage"
-    className="px-4 py-2 bg-primary/80 text-white rounded shadow hover:bg-primary cursor-pointer"
-  >
-    Choose Image
-  </label>
+          <div className="flex items-center gap-3">
+            <label
+              htmlFor="eventImage"
+              className="px-4 py-2 bg-primary/80 text-white rounded shadow hover:bg-primary cursor-pointer"
+            >
+              Choose Image
+            </label>
 
-  <input
-    id="eventImage"
-    type="file"
-    accept="image/*"
-    className="sr-only"
-    onChange={(e) => setImage(e.target.files[0])}
-  />
+            <input
+              id="eventImage"
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              onChange={(e) => setImage(e.target.files[0])}
+            />
 
-  {image ? (
-    <span className="text-gray-800 truncate">{image.name}</span>
-  ) : (
-    <span className="text-gray-400 italic">No file chosen</span>
-  )}
-</div>
+            {image ? (
+              <span className="text-gray-800 truncate">{image.name}</span>
+            ) : (
+              <span className="text-gray-400 italic">No file chosen</span>
+            )}
+          </div>
 
           <div className="flex justify-end gap-2">
             <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">
@@ -168,46 +168,45 @@ const CountdownPage = () => {
                       <p className="text-3xl font-bold">D-{daysLeft >= 0 ? daysLeft : "Passed"}</p>
                       <p className="text-sm font-bold">{moment.utc(event.eventDate).format("MMM D, YYYY")}</p>
                     </div>
+
                     <div className="flex gap-2 mt-2">
-  <button
-    onClick={() => {
-      setSelectedEvent(event);
-      setShowModal(true);
-    }}
-    title="Edit"
-    className="bg-green-100 text-black px-3 py-1 rounded shadow hover:bg-green-200 text-sm cursor-pointer"
-  >
-    <CiEdit />
-  </button>
+                      <button
+                        onClick={() => {
+                          setSelectedEvent(event);
+                          setShowModal(true);
+                        }}
+                        title="Edit"
+                        className="bg-green-100 text-black px-3 py-1 rounded shadow hover:bg-green-200 text-sm cursor-pointer"
+                      >
+                        <CiEdit />
+                      </button>
 
-  <button
-    onClick={() => deleteEvent(event._id)}
-    title="Delete"
-    className="bg-red-500 text-white px-3 py-1 rounded shadow hover:bg-red-600 text-sm cursor-pointer"
-  >
-    <MdDeleteOutline />
-  </button>
+                      <button
+                        onClick={() => deleteEvent(event._id)}
+                        title="Delete"
+                        className="bg-red-500 text-white px-3 py-1 rounded shadow hover:bg-red-600 text-sm cursor-pointer"
+                      >
+                        <MdDeleteOutline />
+                      </button>
 
-  <button
-    onClick={() => toggleDashboard(event._id)}
-    title="Toggle Dashboard"
-    className={`px-3 py-1 rounded shadow ${
-      event.addedToDashboard
-        ? "bg-yellow-100 text-black hover:bg-yellow-500 text-sm cursor-pointer"
-        : "bg-blue-100 text-black hover:bg-gray-400 text-sm cursor-pointer"
-    }`}
-  >
-    {event.addedToDashboard ? <MdBookmarkRemove /> : <IoMdBookmark />}
-  </button>
-</div>
-
+                      <button
+                        onClick={() => toggleDashboard(event._id)}
+                        title="Toggle Dashboard"
+                        className={`px-3 py-1 rounded shadow ${
+                          event.addedToDashboard
+                            ? "bg-yellow-100 text-black hover:bg-yellow-500 text-sm cursor-pointer"
+                            : "bg-blue-100 text-black hover:bg-gray-400 text-sm cursor-pointer"
+                        }`}
+                      >
+                        {event.addedToDashboard ? <MdBookmarkRemove /> : <IoMdBookmark />}
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
             })}
           </div>
         )}
-
         {showModal && (
           <CountdownFormModal
             onClose={() => {
