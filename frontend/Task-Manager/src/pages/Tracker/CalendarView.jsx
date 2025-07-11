@@ -28,7 +28,7 @@ const localizer = dateFnsLocalizer({
 });
 
 const CalendarView = ({ allTasks }) => {
-  const navigate = useNavigate(); // <-- Moved inside component!
+  const navigate = useNavigate();
 
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -39,10 +39,10 @@ const CalendarView = ({ allTasks }) => {
   const [selectedDate, setSelectedDate] = useState(startOfDay(new Date()));
 
   const toUTCDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-  );
+    const date = new Date(dateString);
+    return new Date(
+      Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    );
   };
 
   const handleNavigate = (date) => {
@@ -93,7 +93,6 @@ useEffect(() => {
   }
 
  const formattedEvents = filtered.map((task) => {
-  const formattedTime = task.timeTracked ? ` (${formatTime(task.timeTracked)})` : "";
 
   const dueDate = new Date(task.dueDate);
   // Shift 1 day later
@@ -104,7 +103,7 @@ useEffect(() => {
   );
 
   return {
-    title: task.title + formattedTime,
+    title: task.title,
     start: shiftedDate,
     end: shiftedDate,
     allDay: true,
@@ -173,7 +172,7 @@ useEffect(() => {
     };   
   
   return (
-    <div className="p-4 bg-white rounded-xl shadow">
+    <div className="p-4 rounded-xl shadow">
       {/* Filters */}
       <div className="flex gap-4 mb-4">
         <select
@@ -237,7 +236,7 @@ useEffect(() => {
         view={currentView}
         onNavigate={handleNavigate}
         onView={handleViewChange}
-        style={{ height: 500 }}
+        style={{ height: 500, fontSize: "10px" }}
       />
 
       {/* Tasks list */}
@@ -249,10 +248,10 @@ useEffect(() => {
           <p>No upcoming tasks found.</p>
         ) : (
           <ul className="list-disc pl-5">
-            {filteredTasksForDate.map((task) => (
+            {filteredTasksForDate.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).map((task) => (
               <li
                 key={task._id}
-                className="mb-1 cursor-pointer hover:text-primary hover:underline"
+                className="mb-1 cursor-pointer text-[14px] leading-6 hover:text-primary hover:underline"
                 onClick={() => handleClick(task._id)}
               >
                 <strong>{task.title}</strong> — Due{" "}

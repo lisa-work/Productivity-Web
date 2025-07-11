@@ -125,7 +125,7 @@ const createTask = async (req, res) => {
       assignedUsers.push(creatorId.toString());
     }
 
-    assignedTo = assignedUsers.map((id) => new mongoose.Schema.Types.ObjectId(id));
+    assignedTo = assignedUsers.map((id) => new mongoose.Types.ObjectId(id));
 
     const task = await Task.create({
       title,

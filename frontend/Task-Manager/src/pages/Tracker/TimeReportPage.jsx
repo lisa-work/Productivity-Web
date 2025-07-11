@@ -25,7 +25,7 @@ const TimeReportPage = () => {
  const [range, setRange] = useState([{
    startDate: monthStart,
    endDate: monthEnd,
- key: "selection"
+   key: "selection"
 }]);
 
 useEffect(() => {
@@ -36,7 +36,7 @@ useEffect(() => {
 
 const chartWidth = Math.min(screenWidth - 40, 800);
 
-  const fetchLogs = async () => {
+const fetchLogs = async () => {
     const start = range[0].startDate.toISOString();
     const end = range[0].endDate.toISOString();
 
@@ -86,68 +86,66 @@ const chartWidth = Math.min(screenWidth - 40, 800);
   });
 
   const handleBarClick = (data) => {
-  const startStr = data.startDate.toISOString();
-  const endStr = data.endDate.toISOString();
+    const startStr = data.startDate.toISOString();
+    const endStr = data.endDate.toISOString();
 
-  navigate(`/user/time-tracker?start=${encodeURIComponent(startStr)}&end=${encodeURIComponent(endStr)}&groupBy=${groupBy}`);
-};
-
+    navigate(`/user/time-tracker?start=${encodeURIComponent(startStr)}&end=${encodeURIComponent(endStr)}&groupBy=${groupBy}`);
+  };
 
   let barData = [];
+    if (groupBy === "daily") {
+      barData = Object.entries(groupedByDate).map(([dateStr, duration]) => {
+        const start = new Date(dateStr);
+        const end = new Date(dateStr);
+        end.setHours(23, 59, 59, 999);
 
-if (groupBy === "daily") {
-  barData = Object.entries(groupedByDate).map(([dateStr, duration]) => {
-    const start = new Date(dateStr);
-    const end = new Date(dateStr);
-    end.setHours(23, 59, 59, 999);
+        return {
+          label: dateStr,
+          startDate: start,
+          endDate: end,
+          hours: +(duration / 3600),
+        };
+      });
+    } else if (groupBy === "weekly") {
+      barData = Object.entries(groupedByDate).map(([weekStr, duration]) => {
+        const [year, week] = weekStr.split("-W").map(Number);
 
-    return {
-      label: dateStr,
-      startDate: start,
-      endDate: end,
-      hours: +(duration / 3600),
-    };
-  });
-} else if (groupBy === "weekly") {
-  barData = Object.entries(groupedByDate).map(([weekStr, duration]) => {
-    const [year, week] = weekStr.split("-W").map(Number);
+        const simple = new Date(year, 0, 1 + (week - 1) * 7);
+        const dayOfWeek = simple.getDay();
+        const ISOweekStart = simple;
+        if (dayOfWeek <= 4) {
+          ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+        } else {
+          ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+        }
 
-    const simple = new Date(year, 0, 1 + (week - 1) * 7);
-    const dayOfWeek = simple.getDay();
-    const ISOweekStart = simple;
-    if (dayOfWeek <= 4) {
-      ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-    } else {
-      ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+        const start = new Date(ISOweekStart);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23, 59, 59, 999);
+
+        return {
+          label: `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`,
+          startDate: start,
+          endDate: end,
+          hours: +(duration / 3600),
+        };
+      });
+    } else if (groupBy === "monthly") {
+      barData = Object.entries(groupedByDate).map(([monthStr, duration]) => {
+        const [year, month] = monthStr.split("-").map(Number);
+        const start = new Date(year, month - 1, 1);
+        const end = new Date(year, month, 0);
+        end.setHours(23, 59, 59, 999);
+
+        return {
+          label: start.toLocaleString("default", { month: "short", year: "numeric" }),
+          startDate: start,
+          endDate: end,
+          hours: +(duration / 3600),
+        };
+      });
     }
-
-    const start = new Date(ISOweekStart);
-    const end = new Date(start);
-    end.setDate(start.getDate() + 6);
-    end.setHours(23, 59, 59, 999);
-
-    return {
-      label: `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`,
-      startDate: start,
-      endDate: end,
-      hours: +(duration / 3600),
-    };
-  });
-} else if (groupBy === "monthly") {
-  barData = Object.entries(groupedByDate).map(([monthStr, duration]) => {
-    const [year, month] = monthStr.split("-").map(Number);
-    const start = new Date(year, month - 1, 1);
-    const end = new Date(year, month, 0);
-    end.setHours(23, 59, 59, 999);
-
-    return {
-      label: start.toLocaleString("default", { month: "short", year: "numeric" }),
-      startDate: start,
-      endDate: end,
-      hours: +(duration / 3600),
-    };
-  });
-}
 
 
   const pieData = Object.entries(groupedByTask).map(([task, duration], i) => ({

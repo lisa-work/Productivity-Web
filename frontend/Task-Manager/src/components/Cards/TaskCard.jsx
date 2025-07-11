@@ -209,7 +209,7 @@ const handleToggleTimer = async (e) => {
             </div>
         </div>
 
-        <div className="flex items-center justify-between mt-3">
+        <div className="flex items-center justify-end mt-3 gap-2">
           <AvatarGroup avatars={assignedTo || []} />
 
           {attachmentCount > 0 && (

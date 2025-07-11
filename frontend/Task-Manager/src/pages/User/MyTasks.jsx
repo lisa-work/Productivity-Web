@@ -30,10 +30,6 @@ const MyTasks = () => {
   const priorityParam = searchParams.get("priority");
   const statusParam = searchParams.get("status");
 
-  const clearFilter = () => {
-    setSearchParams({});
-  };
-
   useEffect(() => {
   if (statusParam) {
     setFilterStatus(statusParam);
@@ -45,39 +41,6 @@ const MyTasks = () => {
 
   const navigate = useNavigate();
 
-  const getAllTasks = async () => {
-  try {
-    const isStatusAll = filterStatus === "All";
-    const isPriorityAll = priorityTab === "All";
-
-    const params = {};
-
-    if (!isStatusAll) {
-      params.status = filterStatus;
-    }
-
-    if (!isPriorityAll) {
-      params.priority = priorityTab;
-    }
-
-    const response = await axiosInstance.get(API_PATHS.TASKS.GET_ALL_TASKS, { params });
-
-    setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : []);
-    setTasks(response.data.tasks);
-
-    const statusSummary = response.data?.statusSummary || {};
-    const statusArray = [
-      { label: "All", count: statusSummary.all || 0 },
-      { label: "Pending", count: statusSummary.pendingTasks || 0 },
-      { label: "In Progress", count: statusSummary.inProgressTasks || 0 },
-      { label: "Completed", count: statusSummary.completedTasks || 0 },
-    ];
-
-    setTabs(statusArray);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-  }
-};
   const handleTimeUpdate = (taskId, newTimeTracked) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
@@ -85,7 +48,6 @@ const MyTasks = () => {
       )
     );
   };
-
 
  const handleDownloadReport = async () => {
   try {
@@ -118,7 +80,6 @@ const MyTasks = () => {
   const deleteTask = async (taskId) => {
     try {
       await axiosInstance.delete(API_PATHS.TASKS.DELETE_TASK(taskId));
-
       setOpenDeleteAlert(false);
       toast.success("Task details deleted successfully");
       window.location.reload();
@@ -192,42 +153,43 @@ useEffect(() => {
         </div>
 
 
-<div className="my-3">
-<TaskStatusTabs
-  tabs={tabs}
-  activeTab={filterStatus}
-  setActiveTab={(status) => {
-    setFilterStatus(status);
-    setSearchParams((prev) => {
-      const params = new URLSearchParams(prev);
-      if (status === "All") {
-        params.delete("status");
-      } else {
-        params.set("status", status);
-      }
-      return params;
-    });
-  }}
-/>
-</div>
+          <div className="my-3">
+          <TaskStatusTabs
+            tabs={tabs}
+            activeTab={filterStatus}
+            setActiveTab={(status) => {
+              setFilterStatus(status);
+              setSearchParams((prev) => {
+                const params = new URLSearchParams(prev);
+                if (status === "All") {
+                  params.delete("status");
+                } else {
+                  params.set("status", status);
+                }
+                return params;
+              });
+            }}
+          />
+          </div>
 
-<TaskPriorityTabs
-  activeTab={priorityTab}
-  setActiveTab={(priority) => {
-    setPriorityTab(priority);
-    setSearchParams((prev) => {
-      const params = new URLSearchParams(prev);
-      if (priority === "All") {
-        params.delete("priority");
-      } else {
-        params.set("priority", priority);
-      }
-      return params;
-    });
-  }}
-/>
+          <TaskPriorityTabs
+            activeTab={priorityTab}
+            setActiveTab={(priority) => {
+              setPriorityTab(priority);
+              setSearchParams((prev) => {
+                const params = new URLSearchParams(prev);
+                if (priority === "All") {
+                  params.delete("priority");
+                } else {
+                  params.set("priority", priority);
+                }
+                return params;
+              });
+            }}
+          />
+          
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          {tasks?.map((item, index) => (
+          {tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))?.map((item, index) => (
             <TaskCard
               key={item._id}
               taskId={item._id}
