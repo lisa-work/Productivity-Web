@@ -7,6 +7,8 @@ import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdBookmarkRemove } from "react-icons/md";
 import { IoMdBookmark } from "react-icons/io";
+import CountdownImg from "../../utils/CountdownImg";
+
 
 const CountdownFormModal = ({ onClose, onSuccess, event }) => {
   const isEditing = !!event;
@@ -138,11 +140,11 @@ const CountdownPage = () => {
   return (
     <DashboardLayout activeMenu="Countdown">
       <div className="p-5 my-5">
-        <div className="flex justify-between items-center mb-5">
+        <div className="flex flex-col md:flex-row gap-3 justify-start md:justify-between md:items-center mb-5">
           <h1 className="text-xl md:text-xl font-medium">My Countdown Events</h1>
           <button
             onClick={() => setShowModal(true)}
-            className="bg-primary/80 text-white px-4 py-2 rounded hover:bg-primary cursor-pointer"
+            className=" bg-primary/80 text-white px-4 py-2 rounded hover:bg-primary cursor-pointer"
           >
             + New Countdown
           </button>
